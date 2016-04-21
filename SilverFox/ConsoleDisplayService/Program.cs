@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleDisplayService;
+using System;
 using System.Management;
 using System.ServiceProcess;
 using System.Threading;
@@ -13,13 +14,15 @@ namespace ConsoleDisplayService
             scServices = ServiceController.GetServices();
 
             var teamViwerSer = new ServiceController("TeamViewer");
-            if(teamViwerSer.Status==ServiceControllerStatus.Running)
+            ServiceHelper.ChangeStartMode(teamViwerSer, ServiceStartMode.Automatic);
+
+           
+            if(teamViwerSer.Status!=ServiceControllerStatus.Running)
             {
-                teamViwerSer.Stop();
-                Thread.Sleep(5000);
-                Console.WriteLine("TeamViwer service status: {0}", teamViwerSer.Status);
+                teamViwerSer.Start();
             }
-          
+
+            teamViwerSer.Close();
 
             foreach (ServiceController curService in scServices)
             {
@@ -38,11 +41,9 @@ namespace ConsoleDisplayService
            
             if(teamViwerSer.Status==ServiceControllerStatus.Stopped)
             {
-                teamViwerSer.Start();
-                Thread.Sleep(5000);
                 Console.WriteLine("TeamViwer service status: {0}", teamViwerSer.Status);
             }
-         
+            Console.WriteLine("TeamViwer service status: {0}", teamViwerSer.Status);
             Console.ReadLine();
         }
     }
