@@ -122,8 +122,7 @@ namespace ConsoleDisplayService
             }
             ServiceHelper.ChangeStartMode(scController, startMode);
         }
-
-
+        
     }
 
     class Program
@@ -133,10 +132,10 @@ namespace ConsoleDisplayService
             var ser = new Service("TeamViewer");
 
             // ser.printAllRunningServices();
-           // ser.displayServiceInfo();
+            // ser.displayServiceInfo();
              ser.StopService();
             // ser.StartService();
-           //  ser.ChangeStartMode(Service.StartMode.Manual);
+            //  ser.ChangeStartMode(Service.StartMode.Manual);
 
         }
     }
