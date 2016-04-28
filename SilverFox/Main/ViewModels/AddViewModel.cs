@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Main.Shared
+namespace Main.ViewModels
 {
-    public enum StartModeEnum
+   public class AddViewModel:ViewModelBase
     {
-        Automatic=1,
-        Disabled=2,
-        Manual=3
+        public AddViewModel()
+        {
+
+        }
     }
 }

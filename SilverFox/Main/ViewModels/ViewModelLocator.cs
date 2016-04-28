@@ -14,6 +14,7 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using Main.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Main.ViewModel
@@ -43,6 +44,7 @@ namespace Main.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<AddViewModel>();
         }
 
         public MainViewModel Main
@@ -52,7 +54,15 @@ namespace Main.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-        
+
+        public AddViewModel Add
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AddViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
