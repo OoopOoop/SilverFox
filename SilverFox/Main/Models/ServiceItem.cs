@@ -8,21 +8,22 @@ using System.Runtime.Serialization;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Main.Models
 {
    public class ServiceItem
     {
         public string ServiceName { get; set; }
-        [IgnoreDataMember]
+        [XmlIgnore]
         public string Status { get; set; }
-        [IgnoreDataMember]
+        [XmlIgnore]
         public string DisplayName { get; set; }
-        [IgnoreDataMember]
+        [XmlIgnore]
         public bool CanStop { get; set; }
-        [IgnoreDataMember]
+        [XmlIgnore]
         public string Description { get; set;}
-        [IgnoreDataMember]
+        [XmlIgnore]
         public string StartMode { get; set;}
     }
 }

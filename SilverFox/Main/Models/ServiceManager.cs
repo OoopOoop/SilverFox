@@ -3,15 +3,19 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Management;
 using Main.Shared;
-using System.Runtime.Serialization.Json;
-
-
+using System.IO;
+using System.Xml.Serialization;
+using System.Xml;
+using System;
 
 namespace Main.Models
 {
     //Make it static? (singletom)
     public static class ServiceManager
     {
+
+        const string fileName = "services.txt";
+
         public static ServiceController GetService(ServiceItem item)
         {
             var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
@@ -112,19 +116,55 @@ namespace Main.Models
         public static List<ServiceItem> GetSavedServiceItems()
         {
             //read a file with saved servies
-            return null;
+            List<ServiceItem> savedServices = new List<ServiceItem>();
+
+            try
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(fileName);
+                string xmlString = xmlDocument.OuterXml;
+
+                using (StringReader read = new StringReader(xmlString))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
+
+                    using (XmlReader reader = new XmlTextReader(read))
+                    {
+                        savedServices = (List<ServiceItem>)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+                    read.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return savedServices;
         }
 
 
         //Get reference to windows.storage
         public static void SetSavedServiceItems(List<ServiceItem> items)
         {
-            //saves all selected items (name)
+            try
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, items);
+                    stream.Position = 0;
+                    xmlDocument.Load(stream);
+                    xmlDocument.Save(fileName);
+                    stream.Close();
+                }
+            }
+            catch(Exception ex)
+            {
 
-         // StorageFolder 
-                
-            var jsonSerializer = new DataContractJsonSerializer(typeof(List<ServiceItem>));
-          //  using(var stream =)
+            }
         }
     }
 }
