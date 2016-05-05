@@ -5,8 +5,54 @@
         xmlns:local="clr-namespace:Main.Views"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="AddWindow"
-        Width="300"
-        Height="300"
+        Width="525"
+        Height="350"
         mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="5">
+            <ListView x:Name="serviceListView" HorizontalAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="Auto" Header="Service Name">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Left"
+                                               Text="{Binding Name}"
+                                               TextAlignment="Center" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="Auto" Header="Description">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Stretch" Text="{Binding Description}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="Auto"
+                                        DisplayMemberBinding="{Binding Status}"
+                                        Header="Status">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Stretch" Text="{Binding Status}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="5">
+            <Button Name="addServiceButton"
+                    Width="70"
+                    Height="20"
+                    Content="Add Service" />
+        </StackPanel>
+    </Grid>
 </Window>

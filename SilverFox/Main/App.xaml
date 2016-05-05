@@ -5,7 +5,9 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:Main"
              d1p1:Ignorable="d"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Views\AddWindow.xaml">
+
+
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator xmlns:vm="clr-namespace:Main.ViewModel"
@@ -14,3 +16,7 @@
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+
+
+
+<!--  StartupUri="Views\MainWindow.xaml">  -->
