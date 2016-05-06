@@ -47,7 +47,7 @@ namespace Main.ViewModel
             SimpleIoc.Default.Register<AddViewModel>();
         }
 
-        public MainViewModel Main
+        public MainViewModel MainViewModel
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Main.ViewModel
             }
         }
 
-        public AddViewModel Add
+        public AddViewModel AddViewModel
         {
             get
             {

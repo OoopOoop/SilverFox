@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
 using System;
+using System.Collections.ObjectModel;
 
 namespace Main.Models
 {
@@ -54,7 +55,7 @@ namespace Main.Models
             controller.Refresh();
         }
 
-        public static List<ServiceItem> GetAllServiceItems()
+        public static ObservableCollection<ServiceItem> GetAllServiceItems()
         {
             //get all currently running services
             //var items = ServiceController.GetServices().Select(service => new ServiceItem
@@ -69,21 +70,22 @@ namespace Main.Models
             //return items;
 
 
+            ObservableCollection<ServiceItem> runningServices = new ObservableCollection<ServiceItem>();
 
-            List<ServiceItem> runningServices = new List<ServiceItem>();
             var services = ServiceController.GetServices();
             foreach (var service in services)
             {
                 var wmiService = GetManagementObject(service.ServiceName);
+              
                 runningServices.Add(new ServiceItem
-                {
-                    ServiceName = service.ServiceName,
-                    CanStop = service.CanStop,
-                    DisplayName = service.DisplayName,
-                    Status = service.Status.ToString(),
-                    Description = wmiService["Description"].ToString(),
-                    StartMode = wmiService["StartMode"].ToString()
-                }); 
+                    {
+                        ServiceName = service.ServiceName,
+                        CanStop = service.CanStop,
+                        DisplayName = service.DisplayName,
+                        Status = service.Status.ToString(),
+                        Description = (string)wmiService["Description"],
+                        StartMode = (string)wmiService["StartMode"]
+                    });
             }
 
             return runningServices;
