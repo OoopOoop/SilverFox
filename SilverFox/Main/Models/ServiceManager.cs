@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Main.Models
 {
@@ -115,42 +116,44 @@ namespace Main.Models
             ServiceHelper.ChangeStartMode(controller, mode);
         }
 
-        public static List<ServiceItem> GetSavedServiceItems()
+        public static Task<List<ServiceItem>> GetSavedServiceItems()
         {
             //read a file with saved servies
-            List<ServiceItem> savedServices = new List<ServiceItem>();
-
-            try
+            return Task.Run(() =>
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(fileName);
-                string xmlString = xmlDocument.OuterXml;
-
-                using (StringReader read = new StringReader(xmlString))
+                List<ServiceItem> savedServices = new List<ServiceItem>();
+                try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(fileName);
+                    string xmlString = xmlDocument.OuterXml;
 
-                    using (XmlReader reader = new XmlTextReader(read))
+                    using (StringReader read = new StringReader(xmlString))
                     {
-                        savedServices = (List<ServiceItem>)serializer.Deserialize(reader);
-                        reader.Close();
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
+
+                        using (XmlReader reader = new XmlTextReader(read))
+                        {
+                            savedServices = (List<ServiceItem>)serializer.Deserialize(reader);
+                            reader.Close();
+                        }
+                        read.Close();
                     }
-                    read.Close();
                 }
-            }
-            catch (Exception ex)
-            {
+                catch
+                {
+                    savedServices = new List<ServiceItem>();
+                }
 
-            }
-
-            return savedServices;
+                return savedServices;
+            });
         }
 
 
         //Get reference to windows.storage
-        public static void SetSavedServiceItems(List<ServiceItem> items)
+        public static Task SetSavedServiceItems(List<ServiceItem> items)
         {
-            try
+           return Task.Run(() =>
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
@@ -162,11 +165,7 @@ namespace Main.Models
                     xmlDocument.Save(fileName);
                     stream.Close();
                 }
-            }
-            catch(Exception ex)
-            {
-
-            }
+            });
         }
     }
 }

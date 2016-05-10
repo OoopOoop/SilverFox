@@ -7,6 +7,146 @@
         Title="MainWindow"
         Width="525"
         Height="350"
+        DataContext="{Binding MainViewModel,
+                              Source={StaticResource Locator}}"
         mc:Ignorable="d">
-    <Grid />
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <Button Width="80"
+                    Height="20"
+                    Content="Add" />
+            <Button Width="90"
+                    Height="20"
+                    Margin="5,0,0,0"
+                    Content="Delete Selected" />
+            <Button Width="90"
+                    Height="20"
+                    Margin="5,0,0,0"
+                    Content="Refresh Selected" />
+            <Button Width="80"
+                    Height="20"
+                    Margin="5,0,0,0"
+                    Content="Refresh All" />
+        </StackPanel>
+
+
+        <StackPanel Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Margin="5"
+                    Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" Text=" Status:" />
+            <Button Margin="5" Content="Start" />
+            <Button Margin="5" Content="Stop" />
+            <Button Margin="5" Content="Pause" />
+            <Button Margin="5" Content="Resume" />
+        </StackPanel>
+
+        <DataGrid x:Name="ServicesGrid"
+                  Grid.Row="1"
+                  Grid.RowSpan="2"
+                  Grid.Column="0"
+                  Margin="0,5,0,0"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding RunningServicesCollection}"
+                  SelectionMode="Extended">
+
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseEnter" Handler="MouseEnterHandler" />
+                    <EventSetter Event="PreviewMouseDown" Handler="PreviewMouseDownHandler" />
+                </Style>
+            </DataGrid.RowStyle>
+
+
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="#CCDAFF" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="Auto" Header="Add">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox x:Name="checkBox"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding IsSelected,
+                                                          Mode=TwoWay,
+                                                          RelativeSource={RelativeSource FindAncestor,
+                                                                                         AncestorType={x:Type DataGridRow}}}" />
+
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="Auto" Header="Service Name">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding ServiceName}"
+                                       TextAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="*" Header="Description">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Description}"
+                                       TextAlignment="Left"
+                                       TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="*" Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Status}"
+                                       TextAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5"
+                    Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" Text="Startup:" />
+            <RadioButton Margin="5,10,5,5"
+                         Content="Automatic"
+                         GroupName="startUp" />
+            <RadioButton Margin="5"
+                         Content="Manual"
+                         GroupName="startUp" />
+            <RadioButton Margin="5"
+                         Content="Disabled"
+                         GroupName="startUp" />
+            <Button Margin="5,15,5,0" Content="Apply" />
+        </StackPanel>
+    </Grid>
 </Window>

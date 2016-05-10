@@ -5,7 +5,8 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:Main"
              d1p1:Ignorable="d"
-             StartupUri="Views\AddWindow.xaml">
+             StartupUri="Views\MainWindow.xaml">
+    <!--  StartupUri="Views\AddWindow.xaml">  -->
 
 
     <Application.Resources>
@@ -13,7 +14,14 @@
             <vm:ViewModelLocator xmlns:vm="clr-namespace:Main.ViewModel"
                                  x:Key="Locator"
                                  d:IsDataSource="True" />
+
+            <Style TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
         </ResourceDictionary>
+
+
     </Application.Resources>
 </Application>
 
