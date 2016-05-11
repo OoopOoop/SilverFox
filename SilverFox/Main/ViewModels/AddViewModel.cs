@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Main.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ namespace Main.ViewModels
 {
     public class AddViewModel:ViewModelBase
     {
-        private List<ServiceItem> _selectedServices;
+        private List<ServiceItem> _selectedService;
         public ICommand SaveServicesCommand { get; set; }
 
         private ObservableCollection<ServiceItem> _runningServicesCollection;
@@ -24,14 +26,27 @@ namespace Main.ViewModels
 
         public AddViewModel()
         {
-            SaveServicesCommand = new RelayCommand(SaveServices);
+            SaveServicesCommand = new RelayCommand<object>(SaveServices);
             RunningServicesCollection = getRunningServices();
+            _selectedService = new List<ServiceItem>();
         }
 
         //Save and serialize selected services, redirect to the main page and pass the services
-        private async void  SaveServices()
+        private async void  SaveServices(object obj)
         {
-            await ServiceManager.SetSavedServiceItems(_selectedServices);
+            var services = obj as IEnumerable;
+            if(services!=null)
+            {
+                foreach (ServiceItem item in services)
+                {
+                    _selectedService.Add(item);
+                }
+            }
+           
+            
+            
+             
+           await ServiceManager.SetSavedServiceItems(_selectedService);
         }
 
         //Get collection of all running services

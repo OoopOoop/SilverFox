@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Main.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -66,5 +67,18 @@ namespace Main.Views
 
             return parent;
         }
+
+        //private void ServicesGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    var grid = sender as DataGrid;
+        //    var selected = grid.SelectedItems;
+
+        //    List<string> names = new List<string>();
+        //    foreach (var item in selected)
+        //    {
+        //        var service = item as ServiceItem;
+        //        names.Add(service.DisplayName);
+        //    }
+        //}
     }
 }

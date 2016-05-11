@@ -5,9 +5,8 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:Main"
              d1p1:Ignorable="d"
-             StartupUri="Views\MainWindow.xaml">
-    <!--  StartupUri="Views\AddWindow.xaml">  -->
-
+             StartupUri="Views\AddWindow.xaml">
+    <!--  StartupUri="Views\MainWindow.xaml">  -->
 
     <Application.Resources>
         <ResourceDictionary>
