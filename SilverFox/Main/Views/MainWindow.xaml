@@ -24,8 +24,10 @@
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
                     Orientation="Horizontal">
-            <Button Width="80"
+            <Button Name="GoToAddWinBtn"
+                    Width="80"
                     Height="20"
+                    Command="{Binding NavigateAddWindowCommand}"
                     Content="Add" />
             <Button Width="90"
                     Height="20"
@@ -60,7 +62,7 @@
                   Grid.Column="0"
                   Margin="0,5,0,0"
                   AutoGenerateColumns="False"
-                  ItemsSource="{Binding RunningServicesCollection}"
+                  ItemsSource="{Binding SelectedServicesCollection}"
                   SelectionMode="Extended">
 
 

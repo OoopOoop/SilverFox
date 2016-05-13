@@ -14,10 +14,13 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using Main.Shared;
 using Main.ViewModels;
 using Microsoft.Practices.ServiceLocation;
+using System;
+using System.Windows.Navigation;
 
-namespace Main.ViewModel
+namespace Main.ViewModels
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -43,8 +46,23 @@ namespace Main.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
+            SetupNavigation();
+
+
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AddViewModel>();
+        }
+
+
+      private static void SetupNavigation()
+        {
+            var navigationService = new FrameNavigationService();
+
+            navigationService.Configure("MainWindow", new Uri("/Views/MainWindow.xaml",UriKind.Relative));
+            navigationService.Configure("AddWindow", new Uri("/Views/AddWindow.xaml", UriKind.Relative));
+
+            SimpleIoc.Default.Unregister<IFrameNavigationService>();
+            SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
 
         public MainViewModel MainViewModel

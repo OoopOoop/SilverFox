@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using Main.Models;
+using Main.Shared;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace Main.ViewModels
 {
     public class AddViewModel:ViewModelBase
     {
-        private List<ServiceItem> _selectedService;
+        private Collection<ServiceItem> _selectedService;
         public ICommand SaveServicesCommand { get; set; }
 
         private ObservableCollection<ServiceItem> _runningServicesCollection;
@@ -24,11 +26,16 @@ namespace Main.ViewModels
             set { _runningServicesCollection = value; OnPropertyChanged(); }
         }
 
-        public AddViewModel()
+
+        private IFrameNavigationService _navigationService;
+
+        public AddViewModel(IFrameNavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             SaveServicesCommand = new RelayCommand<object>(SaveServices);
             RunningServicesCollection = getRunningServices();
-            _selectedService = new List<ServiceItem>();
+            _selectedService = new Collection<ServiceItem>();
         }
 
         //Save and serialize selected services, redirect to the main page and pass the services
@@ -43,10 +50,11 @@ namespace Main.ViewModels
                 }
             }
            
-            
-            
-             
-           await ServiceManager.SetSavedServiceItems(_selectedService);
+           
+           await ServiceManager.SetSavedServiceItems(_selectedService.ToList());
+           Messenger.Default.Send(_selectedService);
+            _navigationService.NavigateTo("MainWindow");
+
         }
 
         //Get collection of all running services
