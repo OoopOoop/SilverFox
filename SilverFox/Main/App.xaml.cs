@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Main.Views;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,6 @@ namespace Main
     /// </summary>
     public partial class App : Application
     {
+        
     }
 }

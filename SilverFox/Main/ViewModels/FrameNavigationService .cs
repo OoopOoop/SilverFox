@@ -1,7 +1,9 @@
 ﻿using Main.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,9 +12,22 @@ using System.Windows.Media;
 
 namespace Main.ViewModels
 {
-    class FrameNavigationService : ViewModelBase, IFrameNavigationService
+    class FrameNavigationService :  IFrameNavigationService, INotifyPropertyChanged
     {
-    
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
+
+
+
         private readonly Dictionary<string, Uri> _pagesByKey;
         private readonly List<string> _historic;
         private string _currentPageKey;
@@ -65,11 +80,15 @@ namespace Main.ViewModels
                     throw new ArgumentException(string.Format("No such page: {0} ", pageKey), nameof(pageKey));
                 }
 
-                var frame = GetDescendantFromName(Application.Current.MainWindow, "MainFrame") as Frame;
+                //var frame = GetDescendantFromName(Application.Current.MainWindow, "MainWindow") as Frame;
+
+
+                var frame = GetDescendantFromName(Application.Current.MainWindow, "MainContent") as Frame;
 
                 if (frame != null)
                 {
                     frame.Source = _pagesByKey[pageKey];
+                    
                 }
                 Parameter = parameter;
                 _historic.Add(pageKey);

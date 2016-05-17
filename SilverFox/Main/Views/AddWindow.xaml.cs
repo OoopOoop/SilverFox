@@ -18,12 +18,12 @@ namespace Main.Views
     /// <summary>
     /// Interaction logic for AddWindow.xaml
     /// </summary>
-    public partial class AddWindow : Window
+    public partial class AddWindow : Page
     {
         public AddWindow()
         {
             InitializeComponent();
-
+             
         }
 
 

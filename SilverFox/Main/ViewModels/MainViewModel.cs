@@ -47,7 +47,7 @@ namespace Main.ViewModels
 
         public ICommand NavigateAddWindowCommand { get; set; }
 
-        private readonly  IFrameNavigationService _navigationService;
+        private  IFrameNavigationService _navigationService;
 
         public MainViewModel(IFrameNavigationService navigationService)
         {
@@ -68,7 +68,7 @@ namespace Main.ViewModels
 
         private void toAddWindow()
         {
-            _navigationService.NavigateTo("AddWindow",null);
+            _navigationService.NavigateTo("AddWindow");
         }
     }
 }
