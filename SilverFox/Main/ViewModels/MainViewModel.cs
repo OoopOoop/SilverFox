@@ -6,6 +6,7 @@ using Main.Shared;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System;
+using System.Collections;
 
 namespace Main.ViewModels
 {
@@ -30,6 +31,7 @@ namespace Main.ViewModels
             set { _selectedServicesCollection = value; OnPropertyChanged();}
         }
 
+        public ICommand RefreshStatusCommand { get; set;}
 
         private void setSelectedServices()
         {
@@ -62,9 +64,36 @@ namespace Main.ViewModels
             ////{
             ////    // Code runs "for real"
             ////}
+
+            RefreshStatusCommand = new RelayCommand<object>(refreshStatus);
+
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             setSelectedServices();
         }
+
+
+
+        private void refreshStatus(object obj)
+        {
+            
+            var refreshedServ = obj as IEnumerable;
+
+
+
+            //TODO: change foreach for for loop
+            if (refreshedServ!=null)
+            {
+                foreach (ServiceItem service in refreshedServ)
+                {
+                    int serviceIndex = SelectedServicesCollection.IndexOf(service);
+                    ServiceManager.RefreshStatus(service);
+                    SelectedServicesCollection[serviceIndex] = service;
+                }
+              
+            }
+        }
+
+
 
         private void toAddWindow()
         {

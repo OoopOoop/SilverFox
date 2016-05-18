@@ -23,7 +23,6 @@ namespace Main.Views
         public AddWindow()
         {
             InitializeComponent();
-             
         }
 
 

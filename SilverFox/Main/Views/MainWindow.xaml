@@ -37,9 +37,13 @@
                     Height="20"
                     Margin="5,0,0,0"
                     Content="Delete Selected" />
-            <Button Width="90"
+            <Button x:Name="RefreshSelectedBtn"
+                    Width="90"
                     Height="20"
                     Margin="5,0,0,0"
+                    Command="{Binding RefreshStatusCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
                     Content="Refresh Selected" />
             <Button Width="80"
                     Height="20"

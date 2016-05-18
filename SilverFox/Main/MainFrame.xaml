@@ -8,5 +8,5 @@
         Width="300"
         Height="300"
         mc:Ignorable="d">
-    <Frame x:Name="MainContent" Source="Views/MainWindow.xaml" />
+    <Frame x:Name="MainContent" Source="Views/MainWindow.xaml" NavigationUIVisibility="Hidden" />
 </Window>
