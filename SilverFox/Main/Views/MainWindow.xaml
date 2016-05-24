@@ -70,7 +70,10 @@
                   Grid.Column="0"
                   Margin="0,5,0,0"
                   AutoGenerateColumns="False"
-                  ItemsSource="{Binding SelectedServicesCollection}"
+                  CanUserAddRows="False"
+                  ColumnWidth="*"
+                  ItemsSource="{Binding SelectedServicesCollection,
+                                        Mode=TwoWay}"
                   SelectionMode="Extended">
 
 
@@ -113,7 +116,9 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
-                                       Text="{Binding ServiceName}"
+                                       Text="{Binding Path=DisplayName,
+                                                      Mode=TwoWay,
+                                                      UpdateSourceTrigger=PropertyChanged}"
                                        TextAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -122,7 +127,9 @@
                 <DataGridTemplateColumn Width="*" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Description}"
+                            <TextBlock Text="{Binding Path=Description,
+                                                      Mode=TwoWay,
+                                                      UpdateSourceTrigger=PropertyChanged}"
                                        TextAlignment="Left"
                                        TextWrapping="Wrap" />
                         </DataTemplate>
@@ -133,12 +140,13 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
-                                       Text="{Binding Status}"
+                                       Text="{Binding Path=Status,
+                                                      Mode=TwoWay,
+                                                      UpdateSourceTrigger=Explicit}"
                                        TextAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
         </DataGrid>
 

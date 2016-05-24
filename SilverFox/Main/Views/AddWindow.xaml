@@ -11,21 +11,19 @@
                             Source={StaticResource Locator}}"
       mc:Ignorable="d">
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-
         <DataGrid x:Name="ServicesGrid"
                   Grid.Row="0"
                   Margin="10,10,10,0"
                   AutoGenerateColumns="False"
+                  CanUserAddRows="False"
                   ItemsSource="{Binding RunningServicesCollection}"
                   SelectionMode="Extended">
-
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
@@ -33,7 +31,6 @@
                     <EventSetter Event="PreviewMouseDown" Handler="PreviewMouseDownHandler" />
                 </Style>
             </DataGrid.RowStyle>
-
 
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
@@ -66,7 +63,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
-                                       Text="{Binding ServiceName}"
+                                       Text="{Binding DisplayName}"
                                        TextAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

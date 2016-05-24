@@ -20,7 +20,8 @@ namespace Main.Models
 
         public static ServiceController GetService(ServiceItem item)
         {
-            var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
+            //var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
+            var ServiceControllerService = ServiceController.GetServices().First((x) => x.DisplayName == item.DisplayName);
             return ServiceControllerService;
         }
 
@@ -48,13 +49,37 @@ namespace Main.Models
             controller.WaitForStatus(ServiceControllerStatus.Stopped);
         }
 
-        public static void RefreshStatus(ServiceItem item)
+
+
+
+
+        //public static void RefreshStatus(ServiceItem item)
+        //{
+        //    // call it on startUp
+        //    // Update value of serviceItem status
+        //    var controller = GetService(item);
+        //    controller.Refresh();
+        //}
+
+
+
+        public static ServiceItem RefreshStatus(ServiceItem item)
         {
             // call it on startUp
             // Update value of serviceItem status
             var controller = GetService(item);
             controller.Refresh();
+            string newStatus = controller.Status.ToString();
+
+            if(newStatus!=item.Status)
+            {
+                item.Status = newStatus;
+            }
+
+            return item;
         }
+
+
 
         public static ObservableCollection<ServiceItem> GetAllServiceItems()
         {

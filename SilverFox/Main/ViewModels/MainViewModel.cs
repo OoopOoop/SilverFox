@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace Main.ViewModels
 {
@@ -28,7 +29,7 @@ namespace Main.ViewModels
         public ObservableCollection<ServiceItem> SelectedServicesCollection
         {
             get { return _selectedServicesCollection; }
-            set { _selectedServicesCollection = value; OnPropertyChanged();}
+            set { _selectedServicesCollection = value;}
         }
 
         public ICommand RefreshStatusCommand { get; set;}
@@ -72,26 +73,20 @@ namespace Main.ViewModels
         }
 
 
-
+        //TODO: data in columns not updating, need completly replace item in datagrid to see changes
         private void refreshStatus(object obj)
-        {
-            
-            var refreshedServ = obj as IEnumerable;
+        {            
+            var servToUpdate = obj as IEnumerable;
 
-
-
-            //TODO: change foreach for for loop
-            if (refreshedServ!=null)
+            if(servToUpdate!=null)
             {
-                foreach (ServiceItem service in refreshedServ)
+                servToUpdate.Cast<ServiceItem>().ToList().ForEach(s =>
                 {
-                    int serviceIndex = SelectedServicesCollection.IndexOf(service);
-                    ServiceManager.RefreshStatus(service);
-                    SelectedServicesCollection[serviceIndex] = service;
-                }
-              
-            }
+                 var updatedService = ServiceManager.RefreshStatus(s);
+                 SelectedServicesCollection[SelectedServicesCollection.IndexOf(s)]=new ServiceItem {Status=updatedService.Status,DisplayName=updatedService.DisplayName,Description=updatedService.Description };
+                });
         }
+    }
 
 
 
