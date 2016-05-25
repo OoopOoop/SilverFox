@@ -33,6 +33,7 @@ namespace Main.ViewModels
         }
 
         public ICommand RefreshStatusCommand { get; set;}
+        public ICommand RemoveServiceCommand { get; set;}
 
         private void setSelectedServices()
         {
@@ -56,24 +57,39 @@ namespace Main.ViewModels
         {
             _navigationService = navigationService;
             NavigateAddWindowCommand = new RelayCommand(toAddWindow);
-
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
-
             RefreshStatusCommand = new RelayCommand<object>(refreshStatus);
-
+            RemoveServiceCommand = new RelayCommand<object>(removeFromCollection);
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             setSelectedServices();
+            refreshAll();
+        }
+
+        private void removeFromCollection(object obj)
+        {
+            var servToRemove = obj as IEnumerable;
+            if(servToRemove!=null)
+            {
+                servToRemove.Cast<ServiceItem>().ToList().ForEach(s =>
+                {
+                    SelectedServicesCollection.Remove(s);
+                });
+            }
+
+        }
+
+        private void refreshAll()
+        {
+            if(SelectedServicesCollection.Count!=0)
+            {
+                foreach (ServiceItem service in SelectedServicesCollection)
+                {
+                    SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].Status = ServiceManager.RefreshStatus(service).Status;
+                }
+            }
         }
 
 
-        //TODO: data in columns not updating, need completly replace item in datagrid to see changes
+        //Updates status of single or multiple selected services
         private void refreshStatus(object obj)
         {            
             var servToUpdate = obj as IEnumerable;
@@ -82,8 +98,7 @@ namespace Main.ViewModels
             {
                 servToUpdate.Cast<ServiceItem>().ToList().ForEach(s =>
                 {
-                 var updatedService = ServiceManager.RefreshStatus(s);
-                 SelectedServicesCollection[SelectedServicesCollection.IndexOf(s)]=new ServiceItem {Status=updatedService.Status,DisplayName=updatedService.DisplayName,Description=updatedService.Description };
+                    SelectedServicesCollection[SelectedServicesCollection.IndexOf(s)].Status = ServiceManager.RefreshStatus(s).Status;
                 });
         }
     }

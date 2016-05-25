@@ -54,5 +54,10 @@ namespace Main.Views
 
             return parent;
         }
+
+        private void ClearMultiselBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ServicesGrid.UnselectAll();
+        }
     }
 }

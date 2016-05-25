@@ -12,18 +12,73 @@ using System.Xml.Serialization;
 
 namespace Main.Models
 {
-   public class ServiceItem
+   public class ServiceItem:ViewModelBase
     {
-        public string ServiceName { get; set; }
+       // public string ServiceName { get; set; }    
+       // public string Status { get; set; }
+        //[XmlIgnore]
+       // public string DisplayName { get; set;}
+        //[XmlIgnore]
+        //public bool CanStop { get; set; }
+        //[XmlIgnore]
+        //public string Description { get; set;}
+        //[XmlIgnore]
+        //public string StartMode { get; set;}
+
+
         [XmlIgnore]
-        public string Status { get; set; }
+        private string displayName;
+
+        public string DisplayName
+        {
+            get { return displayName; }
+            set { displayName = value; OnPropertyChanged(); }
+        }
+
+        private string serviceName;
+
+        public string ServiceName
+        {
+            get { return serviceName; }
+            set { serviceName = value; OnPropertyChanged(); }
+        }
+
         [XmlIgnore]
-        public string DisplayName { get; set; }
+        private string status;
+
+        public string Status
+        {
+            get { return status; }
+            set { status = value; OnPropertyChanged(); }
+        }
+
         [XmlIgnore]
-        public bool CanStop { get; set; }
+        private bool canStop;
+
+        public bool CanStop
+        {
+            get { return canStop; }
+            set { canStop = value; OnPropertyChanged(); }
+        }
+
         [XmlIgnore]
-        public string Description { get; set;}
+        private string description;
+
+        public string Description
+        {
+            get { return description; }
+            set { description = value; OnPropertyChanged(); }
+        }
+
         [XmlIgnore]
-        public string StartMode { get; set;}
+        private string startMode;
+
+        public string StartMode
+        {
+            get { return startMode; }
+            set { startMode = value; OnPropertyChanged(); }
+        }
+
+
     }
 }

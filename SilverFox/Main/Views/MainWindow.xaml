@@ -28,16 +28,24 @@
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
                     Orientation="Horizontal">
+
+
             <Button Name="GoToAddWinBtn"
                     Width="80"
                     Height="20"
                     Command="{Binding NavigateAddWindowCommand}"
                     Content="Add" />
-            <Button Width="90"
+
+            <Button x:Name="DeleteSelectedSerBtn"
+                    Width="90"
                     Height="20"
                     Margin="5,0,0,0"
+                    Command="{Binding RemoveServiceCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
                     Content="Delete Selected" />
-            <Button x:Name="RefreshSelectedBtn"
+
+            <Button x:Name="RefreshSelectedSerBtn"
                     Width="90"
                     Height="20"
                     Margin="5,0,0,0"
@@ -45,10 +53,21 @@
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
                     Content="Refresh Selected" />
-            <Button Width="80"
+
+
+            <Button x:Name="RefreshAllSerBtn"
+                    Width="80"
                     Height="20"
                     Margin="5,0,0,0"
+                    Command="{Binding RefreshStatusAll}"
                     Content="Refresh All" />
+
+            <Button Name="ClearMultiselBtn"
+                    Width="80"
+                    Height="20"
+                    Margin="5,0,0,0"
+                    Click="ClearMultiselBtn_Click"
+                    Content="Clear Selection" />
         </StackPanel>
 
 
@@ -60,8 +79,8 @@
             <TextBlock HorizontalAlignment="Center" Text=" Status:" />
             <Button Margin="5" Content="Start" />
             <Button Margin="5" Content="Stop" />
-            <Button Margin="5" Content="Pause" />
-            <Button Margin="5" Content="Resume" />
+            <!--<Button Margin="5" Content="Pause" />
+            <Button Margin="5" Content="Resume" />-->
         </StackPanel>
 
         <DataGrid x:Name="ServicesGrid"

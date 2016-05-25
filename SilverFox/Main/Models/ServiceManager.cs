@@ -51,8 +51,6 @@ namespace Main.Models
 
 
 
-
-
         //public static void RefreshStatus(ServiceItem item)
         //{
         //    // call it on startUp

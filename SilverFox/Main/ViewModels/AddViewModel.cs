@@ -2,14 +2,9 @@
 using GalaSoft.MvvmLight.Messaging;
 using Main.Models;
 using Main.Shared;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Main.ViewModels
@@ -54,6 +49,7 @@ namespace Main.ViewModels
            await ServiceManager.SetSavedServiceItems(_selectedService.ToList());
            Messenger.Default.Send(_selectedService);
             _navigationService.NavigateTo("MainWindow");
+            _selectedService.Clear();
 
         }
 
