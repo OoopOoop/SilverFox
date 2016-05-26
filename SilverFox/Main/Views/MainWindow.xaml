@@ -5,14 +5,23 @@
       xmlns:local="clr-namespace:Main.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Title="MainWindow"
+      Width="Auto"
+      Height="Auto"
       DataContext="{Binding MainViewModel,
                             Source={StaticResource Locator}}"
       mc:Ignorable="d">
 
-    <!--
-        Width="525"
-        Height="350"
-    -->
+    <Page.Resources>
+        <Style x:Key="EnableBtnStyle" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ServicesGrid}" Value="0">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+
 
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
@@ -43,7 +52,8 @@
                     Command="{Binding RemoveServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
-                    Content="Delete Selected" />
+                    Content="Delete Selected"
+                    Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshSelectedSerBtn"
                     Width="90"
@@ -52,22 +62,25 @@
                     Command="{Binding RefreshStatusCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
-                    Content="Refresh Selected" />
+                    Content="Refresh Selected"
+                    Style="{StaticResource EnableBtnStyle}" />
 
 
             <Button x:Name="RefreshAllSerBtn"
                     Width="80"
                     Height="20"
                     Margin="5,0,0,0"
-                    Command="{Binding RefreshStatusAll}"
-                    Content="Refresh All" />
+                    Command="{Binding RefreshStatusAllCommand}"
+                    Content="Refresh All"
+                    Style="{StaticResource EnableBtnStyle}" />
 
             <Button Name="ClearMultiselBtn"
                     Width="80"
                     Height="20"
                     Margin="5,0,0,0"
                     Click="ClearMultiselBtn_Click"
-                    Content="Clear Selection" />
+                    Content="Clear Selection"
+                    Style="{StaticResource EnableBtnStyle}" />
         </StackPanel>
 
 
@@ -77,8 +90,23 @@
                     Margin="5"
                     Orientation="Vertical">
             <TextBlock HorizontalAlignment="Center" Text=" Status:" />
-            <Button Margin="5" Content="Start" />
-            <Button Margin="5" Content="Stop" />
+
+            <Button x:Name="StartServiceBtn"
+                    Margin="5"
+                    Command="{Binding StartServiceCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
+                    Content="Start"
+                    Style="{StaticResource EnableBtnStyle}" />
+
+
+            <Button x:Name="StopServiceBtn"
+                    Margin="5"
+                    Command="{Binding StopServiceCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
+                    Content="Stop"
+                    Style="{StaticResource EnableBtnStyle}" />
             <!--<Button Margin="5" Content="Pause" />
             <Button Margin="5" Content="Resume" />-->
         </StackPanel>
@@ -138,10 +166,12 @@
                                        Text="{Binding Path=DisplayName,
                                                       Mode=TwoWay,
                                                       UpdateSourceTrigger=PropertyChanged}"
-                                       TextAlignment="Center" />
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
 
                 <DataGridTemplateColumn Width="*" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
@@ -161,11 +191,29 @@
                             <TextBlock VerticalAlignment="Center"
                                        Text="{Binding Path=Status,
                                                       Mode=TwoWay,
-                                                      UpdateSourceTrigger=Explicit}"
+                                                      UpdateSourceTrigger=PropertyChanged}"
                                        TextAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+
+
+                <DataGridTemplateColumn Width="*" Header="Start Mode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Path=StartMode,
+                                                      Mode=TwoWay,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                                       TextAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+
+
             </DataGrid.Columns>
         </DataGrid>
 
@@ -174,16 +222,49 @@
                     Margin="5"
                     Orientation="Vertical">
             <TextBlock HorizontalAlignment="Center" Text="Startup:" />
+
+
             <RadioButton Margin="5,10,5,5"
+                         Command="{Binding RadioBtnStatusCommand}"
+                         CommandParameter="Automatic"
                          Content="Automatic"
                          GroupName="startUp" />
+
             <RadioButton Margin="5"
+                         Command="{Binding RadioBtnStatusCommand}"
+                         CommandParameter="Manual"
                          Content="Manual"
                          GroupName="startUp" />
+
             <RadioButton Margin="5"
+                         Command="{Binding RadioBtnStatusCommand}"
+                         CommandParameter="Disabled"
                          Content="Disabled"
                          GroupName="startUp" />
-            <Button Margin="5,15,5,0" Content="Apply" />
+
+
+
+            <Button x:Name="changeStatusBtn"
+                    Margin="5,15,5,0"
+                    Command="{Binding ChangeStatusCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
+                    Content="Apply"
+                    Style="{StaticResource EnableBtnStyle}" />
+
+
+
+
+            <!--<Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource StartupStatusConverter}">
+                    <Binding Path="SelectedItems" ElementName="ServicesGrid"/>
+                    <Binding Path="Content" ElementName="startUp"/>
+                </MultiBinding>
+            </Button.CommandParameter>-->
+
+
+
+
         </StackPanel>
     </Grid>
 </Page>

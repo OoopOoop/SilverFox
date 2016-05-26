@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Main.ViewModels
 {
-    public class AddViewModel:ViewModelBase
+    public class AddViewModel
     {
         private Collection<ServiceItem> _selectedService;
         public ICommand SaveServicesCommand { get; set; }
@@ -18,7 +18,7 @@ namespace Main.ViewModels
         public ObservableCollection<ServiceItem> RunningServicesCollection
         {
             get { return _runningServicesCollection; }
-            set { _runningServicesCollection = value; OnPropertyChanged(); }
+            set { _runningServicesCollection = value; }
         }
 
 

@@ -36,18 +36,23 @@ namespace Main.Models
         {
             //Start
             var controller=GetService(item);
-            controller.Start();
-            controller.WaitForStatus(ServiceControllerStatus.Running);
-           
+            if (controller.Status != ServiceControllerStatus.Running)
+            {
+                controller.Start();
+                controller.WaitForStatus(ServiceControllerStatus.Running);
+            }
         }
 
         public static void StopService(ServiceItem item)
         {
             //Stop
             var controller = GetService(item);
-            controller.Stop();
-            controller.WaitForStatus(ServiceControllerStatus.Stopped);
-        }
+            if(controller.Status!=ServiceControllerStatus.Stopped)
+            {
+                controller.Stop();
+                controller.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+    }
 
 
 
@@ -65,13 +70,24 @@ namespace Main.Models
         {
             // call it on startUp
             // Update value of serviceItem status
+
+            var wmiService = GetManagementObject(item.ServiceName);
+
             var controller = GetService(item);
             controller.Refresh();
+
             string newStatus = controller.Status.ToString();
 
-            if(newStatus!=item.Status)
+            string newStartup = (string)wmiService["StartMode"];
+
+            if (newStatus!=item.Status)
             {
                 item.Status = newStatus;
+            }
+
+            else if(newStartup != item.StartMode)
+            {
+                item.StartMode = newStartup;
             }
 
             return item;

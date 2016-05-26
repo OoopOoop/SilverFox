@@ -2,8 +2,10 @@
 using Main.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Management;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.ServiceProcess;
 using System.Text;
@@ -12,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace Main.Models
 {
-   public class ServiceItem:ViewModelBase
+   public class ServiceItem:INotifyPropertyChanged
     {
        // public string ServiceName { get; set; }    
        // public string Status { get; set; }
@@ -80,5 +82,10 @@ namespace Main.Models
         }
 
 
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string propName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
 }
