@@ -12,11 +12,10 @@ using System.Threading.Tasks;
 
 namespace Main.Models
 {
-    //Make it static? (singletom)
+
     public static class ServiceManager
     {
-
-        const string fileName = "services.txt";
+        const string fileName = "Savedservices.xml";
 
         public static ServiceController GetService(ServiceItem item)
         {
@@ -206,5 +205,6 @@ namespace Main.Models
                 }
             });
         }
+
     }
 }

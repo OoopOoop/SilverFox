@@ -8,6 +8,8 @@ using System.Windows.Input;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Main.ViewModels
 {
@@ -32,11 +34,12 @@ namespace Main.ViewModels
         public ICommand StartServiceCommand { get; set;}
         public ICommand ChangeStatusCommand { get; set;}
         public ICommand RadioBtnStatusCommand { get; set;}
+        public ICommand WindowClosingCommand { get; set;}
 
         // get services from addWindow
         private void displaySelectedServices()
         {
-            Messenger.Default.Register <Collection<ServiceItem>>(
+            Messenger.Default.Register <ObservableCollection<ServiceItem>>(
                 this,
                 services =>
                 {
@@ -54,18 +57,27 @@ namespace Main.ViewModels
 
         public MainViewModel(IFrameNavigationService navigationService)
         {
+
+            SelectedServicesCollection = new ObservableCollection<ServiceItem>();
+
+
+            Task.Run(async () => await loadData()).Wait();
+       
             _navigationService = navigationService;
+
+           
+
             NavigateAddWindowCommand = new RelayCommand(GotoAddWindow);
             RefreshStatusCommand = new RelayCommand<object>(refreshStatus);
             RemoveServiceCommand = new RelayCommand<object>(removeFromCollection);
             RefreshStatusAllCommand = new RelayCommand(refreshAll);
             StopServiceCommand = new RelayCommand<object>(stopService);
             StartServiceCommand = new RelayCommand<object>(startService);
-
             RadioBtnStatusCommand = new RelayCommand<string>(setStatus);
             ChangeStatusCommand = new RelayCommand<object>(changeStatus);
 
-            SelectedServicesCollection = new ObservableCollection<ServiceItem>();
+            WindowClosingCommand = new RelayCommand(saveServicesOnExit);
+
 
 
             displaySelectedServices();
@@ -73,11 +85,68 @@ namespace Main.ViewModels
         }
 
 
+
+        private async void saveServicesOnExit()
+        {
+            await ServiceManager.SetSavedServiceItems(SelectedServicesCollection.ToList());
+        }
+
+
+
+
+
+
+        private async Task loadData()
+        {
+            await getServices();   
+        }
+
+
+        public async Task<ObservableCollection<ServiceItem>> getServices()
+        {
+            await ensureServicesLoaded();
+            return SelectedServicesCollection;
+        }
+
+
+        private async Task ensureServicesLoaded()
+        {
+            if (SelectedServicesCollection.Count == 0)
+            {
+                await getServicesDataAsync();
+            }
+            return;
+        }
+
+
+        private async Task getServicesDataAsync()
+        {
+            if (SelectedServicesCollection.Count != 0)
+            {
+                return;
+            }
+
+            try
+            {
+                var collection = await ServiceManager.GetSavedServiceItems();
+                SelectedServicesCollection = new ObservableCollection<ServiceItem>(collection);
+            }
+            catch
+            {
+                SelectedServicesCollection = new ObservableCollection<ServiceItem>();
+            }
+        }
+
+
+
+
+
+
+
+
         // get "automatic" "manual" or "disabled" status  from radiobuttons
         private void setStatus(string _status) => status = _status;
      
-
-
         private void changeStatus(object obj)
         {
             var servChngStatus = obj as IEnumerable;
@@ -90,8 +159,6 @@ namespace Main.ViewModels
                 });
             }
         }
-
-
 
         private void startService(object obj)
         {
@@ -119,7 +186,6 @@ namespace Main.ViewModels
             }
         }
 
-
         //remove selected services from the datagrid
         private void removeFromCollection(object obj)
         {
@@ -133,7 +199,6 @@ namespace Main.ViewModels
             }
         }
 
-
         //refresh all services in datagrid selected or not
         private void refreshAll()
         {
@@ -145,7 +210,6 @@ namespace Main.ViewModels
                 }
             }
         }
-
 
         //Updates status of single or multiple selected services
         private void refreshStatus(object obj)
@@ -167,5 +231,7 @@ namespace Main.ViewModels
         {
             _navigationService.NavigateTo("AddWindow");
         }
+
+        
     }
 }

@@ -11,7 +11,7 @@ namespace Main.ViewModels
 {
     public class AddViewModel
     {
-        private Collection<ServiceItem> _selectedService;
+        private ObservableCollection<ServiceItem> _selectedService;
         public ICommand SaveServicesCommand { get; set; }
 
         private ObservableCollection<ServiceItem> _runningServicesCollection;
@@ -21,20 +21,19 @@ namespace Main.ViewModels
             set { _runningServicesCollection = value; }
         }
 
-
         private IFrameNavigationService _navigationService;
 
         public AddViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
 
-            SaveServicesCommand = new RelayCommand<object>(SaveServices);
+            SaveServicesCommand = new RelayCommand<object>(sendToMainServices);
             RunningServicesCollection = getRunningServices();
-            _selectedService = new Collection<ServiceItem>();
+            _selectedService = new ObservableCollection<ServiceItem>();
         }
 
         //Save and serialize selected services, redirect to the main page and pass the services
-        private async void  SaveServices(object obj)
+        private  void  sendToMainServices(object obj)
         {
             var services = obj as IEnumerable;
             if(services!=null)
@@ -46,7 +45,8 @@ namespace Main.ViewModels
             }
            
            
-           await ServiceManager.SetSavedServiceItems(_selectedService.ToList());
+           //await ServiceManager.SetSavedServiceItems(_selectedService.ToList());
+
            Messenger.Default.Send(_selectedService);
             _navigationService.NavigateTo("MainWindow");
             _selectedService.Clear();

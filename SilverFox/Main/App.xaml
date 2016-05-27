@@ -7,10 +7,6 @@
              d1p1:Ignorable="d"
              StartupUri="MainFrame.xaml">
 
-    <!--  StartupUri="Views\AddWindow.xaml">  -->
-    <!--  StartupUri="Views\MainWindow.xaml">  -->
-
-
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator xmlns:vm="clr-namespace:Main.ViewModels"
@@ -22,11 +18,5 @@
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
         </ResourceDictionary>
-
-
     </Application.Resources>
 </Application>
-
-
-
-<!--  StartupUri="Views\MainWindow.xaml">  -->

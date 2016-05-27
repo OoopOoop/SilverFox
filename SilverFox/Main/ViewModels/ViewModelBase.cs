@@ -12,5 +12,14 @@ namespace Main.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string propName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+
+
+        public ViewModelBase()
+        {
+            OnDataLoaded();
+        }
+
+        protected abstract void OnDataLoaded();
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Main.ViewModels;
+using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,15 +8,36 @@ using System.Windows.Media;
 
 namespace Main.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Page
     {
+      
         public MainWindow()
         {
             InitializeComponent();
+
+         App.Current.MainWindow.Closing += new CancelEventHandler(callVMSaveCommand);
+
         }
+
+        private void callVMSaveCommand(object sender, CancelEventArgs e)
+        {
+            var viewModel = (MainViewModel)DataContext;
+            if (viewModel.WindowClosingCommand.CanExecute(null))
+                viewModel.WindowClosingCommand.Execute(null);
+        }
+
+
+    
+
+
+
+
+
+
+
+
+
 
         private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
@@ -58,6 +81,11 @@ namespace Main.Views
         private void ClearMultiselBtn_Click(object sender, RoutedEventArgs e)
         {
             ServicesGrid.UnselectAll();
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
