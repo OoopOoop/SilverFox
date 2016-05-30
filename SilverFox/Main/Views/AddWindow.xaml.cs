@@ -26,17 +26,15 @@ namespace Main.Views
         }
 
 
-
-        //Activate rows MultiSelect in dataGrid
         private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
-        
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 DataGridRow row = GetVisualParentByType((FrameworkElement)e.OriginalSource, typeof(DataGridRow)) as DataGridRow;
 
                 row.IsSelected = !row.IsSelected;
                 e.Handled = true;
+
             }
         }
 
@@ -48,10 +46,8 @@ namespace Main.Views
 
                 row.IsSelected = !row.IsSelected;
                 e.Handled = true;
-                
             }
         }
-
 
         public static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
         {
@@ -67,17 +63,7 @@ namespace Main.Views
             return parent;
         }
 
-        //private void ServicesGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    var grid = sender as DataGrid;
-        //    var selected = grid.SelectedItems;
 
-        //    List<string> names = new List<string>();
-        //    foreach (var item in selected)
-        //    {
-        //        var service = item as ServiceItem;
-        //        names.Add(service.DisplayName);
-        //    }
-        //}
+
     }
 }

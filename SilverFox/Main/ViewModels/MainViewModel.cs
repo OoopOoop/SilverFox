@@ -1,49 +1,152 @@
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Main.Models;
 using Main.Shared;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel;
 
 namespace Main.ViewModels
 {
-    public class MainViewModel 
+    public class MainViewModel:NotifyClass
     {
+        private string _status;
+        private RelayCommand<object> _rerfreshselectedStatusCommand;
         private ObservableCollection<ServiceItem> _selectedServicesCollection;
+        private RelayCommand _loadServicesCommand;
+        private RelayCommand<object> _removeServiceCommand;
+        private RelayCommand _refreshAllStatusCommand;
+        private RelayCommand<object> _stopServiceCommand;
+        private RelayCommand<object> _startServiceCommand;
+        private RelayCommand<object> _changeStatusCommand;
+        private RelayCommand<string> _changeStartupCommand;
+        private RelayCommand _navigateAddWindowCommand;
+        private RelayCommand _windowClosingCommand;
+        private IFrameNavigationService _navigationService;
+
         public ObservableCollection<ServiceItem> SelectedServicesCollection
         {
             get { return _selectedServicesCollection; }
-            set { _selectedServicesCollection = value;}
+            set { _selectedServicesCollection = value; OnPropertyChanged(); }
         }
 
+        //Updates status of single or multiple selected services
+        public RelayCommand<object> RefreshSelectedStatusCommand => _rerfreshselectedStatusCommand ?? (_rerfreshselectedStatusCommand = new RelayCommand<object>(
+           obj =>
+           {
+               var servToUpdate = obj as IEnumerable;
+               if (servToUpdate != null)
+               {
+                   servToUpdate.Cast<ServiceItem>().ToList().ForEach(service =>
+                   {
+                       SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].Status = ServiceManager.RefreshStatus(service).Status;
+                       SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].StartMode = ServiceManager.RefreshStatus(service).StartMode;
+                   });
+               }
+           }));
 
-        private string status;
+        //remove selected services from the datagrid
+        public RelayCommand<object> RemoveServiceCommand => _removeServiceCommand ?? (_removeServiceCommand = new RelayCommand<object>(
+            obj =>
+            {
+                var servToRemove = obj as IEnumerable;
+                if (servToRemove != null)
+                {
+                    servToRemove.Cast<ServiceItem>().ToList().ForEach(service =>
+                    {
+                        SelectedServicesCollection.Remove(service);
+                    });
+                }
+            }));
 
+        public RelayCommand RefreshAllStatusCommand => _refreshAllStatusCommand ?? (_refreshAllStatusCommand = new RelayCommand(refreshAllServicesStatus));
+
+        public RelayCommand<object> StopServiceCommand => _stopServiceCommand ?? (_stopServiceCommand = new RelayCommand<object>(
+            obj =>
+            {
+                var servToStop = obj as IEnumerable;
+                if (servToStop != null)
+                {
+                    servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
+                    {
+                        ServiceManager.StopService(service);
+                        service.Status = ServiceManager.RefreshStatus(service).Status;
+                    });
+                }
+            }));
+
+        public RelayCommand<object> StartServiceCommand => _startServiceCommand ?? (_startServiceCommand = new RelayCommand<object>(
+            obj =>
+            {
+                var servToStop = obj as IEnumerable;
+                if (servToStop != null)
+                {
+                    servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
+                    {
+                        ServiceManager.StartService(service);
+                        service.Status = ServiceManager.RefreshStatus(service).Status;
+                    });
+                }
+            }));
+
+        public RelayCommand<object> ChangeStatusCommand => _changeStatusCommand ?? (_changeStatusCommand = new RelayCommand<object>(
+            obj =>
+            {
+                var servChngStatus = obj as IEnumerable;
+                if (servChngStatus != null && _status != String.Empty)
+                {
+                    servChngStatus.Cast<ServiceItem>().ToList().ForEach(service =>
+                    {
+                        ServiceManager.ChangeStartMode(service, _status);
+                        service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
+                    });
+                }
+            }));
+
+        // get "automatic" "manual" or "disabled" status  from radiobuttons
+        public RelayCommand<string> ChangeStartupCommand => _changeStartupCommand ?? (_changeStartupCommand = new RelayCommand<string>(
+         status =>
+         {
+             _status = status;
+         }));
+        
+        public RelayCommand WindowClosingCommand => _windowClosingCommand ?? (_windowClosingCommand = new RelayCommand(
+             () =>
+            {
+                 ServiceManager.SetSavedServiceItems(SelectedServicesCollection.ToList());
+            }));
+        
+        public RelayCommand NavigateAddWindowCommand => _navigateAddWindowCommand ?? (_navigateAddWindowCommand = new RelayCommand(
+            () =>
+            {
+                _navigationService.NavigateTo("AddWindow");
+            }));
+        
+        public RelayCommand LoadServicesCommand => _loadServicesCommand ?? (_loadServicesCommand = new RelayCommand(
+            async () =>
+            {
+                await getServices();
+            }));
       
 
-        public ICommand RefreshStatusCommand { get; set;}
-        public ICommand RemoveServiceCommand { get; set;}
-        public ICommand RefreshStatusAllCommand { get; set;}
-        public ICommand StopServiceCommand { get; set;}
-        public ICommand StartServiceCommand { get; set;}
-        public ICommand ChangeStatusCommand { get; set;}
-        public ICommand RadioBtnStatusCommand { get; set;}
-        public ICommand WindowClosingCommand { get; set;}
+        public MainViewModel(IFrameNavigationService navigationService)
+        {
+            SelectedServicesCollection = new ObservableCollection<ServiceItem>();
+            _navigationService = navigationService;
+            displaySelectedServices();
+            refreshAllServicesStatus();
+        }
 
         // get services from addWindow
         private void displaySelectedServices()
         {
-            Messenger.Default.Register <ObservableCollection<ServiceItem>>(
+            Messenger.Default.Register<ObservableCollection<ServiceItem>>(
                 this,
                 services =>
                 {
-                    foreach (ServiceItem  service in services)
+                    foreach (ServiceItem service in services)
                     {
                         SelectedServicesCollection.Add(service);
                     }
@@ -51,65 +154,7 @@ namespace Main.ViewModels
         }
 
 
-        public ICommand NavigateAddWindowCommand { get; set; }
-
-        private  IFrameNavigationService _navigationService;
-
-        public MainViewModel(IFrameNavigationService navigationService)
-        {
-
-            SelectedServicesCollection = new ObservableCollection<ServiceItem>();
-
-
-            Task.Run(async () => await loadData()).Wait();
-       
-            _navigationService = navigationService;
-
-           
-
-            NavigateAddWindowCommand = new RelayCommand(GotoAddWindow);
-            RefreshStatusCommand = new RelayCommand<object>(refreshStatus);
-            RemoveServiceCommand = new RelayCommand<object>(removeFromCollection);
-            RefreshStatusAllCommand = new RelayCommand(refreshAll);
-            StopServiceCommand = new RelayCommand<object>(stopService);
-            StartServiceCommand = new RelayCommand<object>(startService);
-            RadioBtnStatusCommand = new RelayCommand<string>(setStatus);
-            ChangeStatusCommand = new RelayCommand<object>(changeStatus);
-
-            WindowClosingCommand = new RelayCommand(saveServicesOnExit);
-
-
-
-            displaySelectedServices();
-            refreshAll();
-        }
-
-
-
-        private async void saveServicesOnExit()
-        {
-            await ServiceManager.SetSavedServiceItems(SelectedServicesCollection.ToList());
-        }
-
-
-
-
-
-
-        private async Task loadData()
-        {
-            await getServices();   
-        }
-
-
-        public async Task<ObservableCollection<ServiceItem>> getServices()
-        {
-            await ensureServicesLoaded();
-            return SelectedServicesCollection;
-        }
-
-
-        private async Task ensureServicesLoaded()
+        private async Task getServices()
         {
             if (SelectedServicesCollection.Count == 0)
             {
@@ -136,73 +181,11 @@ namespace Main.ViewModels
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             }
         }
-
-
-
-
-
-
-
-
-        // get "automatic" "manual" or "disabled" status  from radiobuttons
-        private void setStatus(string _status) => status = _status;
-     
-        private void changeStatus(object obj)
-        {
-            var servChngStatus = obj as IEnumerable;
-            if (servChngStatus != null&&status!=String.Empty)
-            {
-                servChngStatus.Cast<ServiceItem>().ToList().ForEach(service =>
-                {
-                    ServiceManager.ChangeStartMode(service,status);
-                    service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
-                });
-            }
-        }
-
-        private void startService(object obj)
-        {
-            var servToStop = obj as IEnumerable;
-            if (servToStop != null)
-            {
-                servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
-                {
-                    ServiceManager.StartService(service);
-                    service.Status = ServiceManager.RefreshStatus(service).Status;
-                });
-            }
-        }
-
-        private void stopService(object obj)
-        {
-            var servToStop = obj as IEnumerable;
-            if (servToStop != null)
-            {
-                servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
-                {
-                    ServiceManager.StopService(service);
-                    service.Status=ServiceManager.RefreshStatus(service).Status;
-                });
-            }
-        }
-
-        //remove selected services from the datagrid
-        private void removeFromCollection(object obj)
-        {
-            var servToRemove = obj as IEnumerable;
-            if(servToRemove!=null)
-            {
-                servToRemove.Cast<ServiceItem>().ToList().ForEach(service =>
-                {
-                    SelectedServicesCollection.Remove(service);
-                });
-            }
-        }
-
+        
         //refresh all services in datagrid selected or not
-        private void refreshAll()
+        private void refreshAllServicesStatus()
         {
-            if(SelectedServicesCollection.Count!=0)
+            if (SelectedServicesCollection.Count != 0)
             {
                 foreach (ServiceItem service in SelectedServicesCollection)
                 {
@@ -210,28 +193,5 @@ namespace Main.ViewModels
                 }
             }
         }
-
-        //Updates status of single or multiple selected services
-        private void refreshStatus(object obj)
-        {            
-            var servToUpdate = obj as IEnumerable;
-
-            if(servToUpdate!=null)
-            {
-                servToUpdate.Cast<ServiceItem>().ToList().ForEach(service =>
-                {
-                    SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].Status = ServiceManager.RefreshStatus(service).Status;
-                });
-        }
-    }
-
-
-
-        private void GotoAddWindow()
-        {
-            _navigationService.NavigateTo("AddWindow");
-        }
-
-        
     }
 }

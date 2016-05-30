@@ -1,35 +1,26 @@
 ﻿using Main.Shared;
-using Main.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Management;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Main.Models
 {
-   public class ServiceItem:INotifyPropertyChanged
+    public class ServiceItem : NotifyClass
     {
-       // public string ServiceName { get; set; }    
-       // public string Status { get; set; }
-        //[XmlIgnore]
-       // public string DisplayName { get; set;}
-        //[XmlIgnore]
-        //public bool CanStop { get; set; }
-        //[XmlIgnore]
-        //public string Description { get; set;}
-        //[XmlIgnore]
-        //public string StartMode { get; set;}
-
+        private string serviceName;
 
         [XmlIgnore]
         private string displayName;
+
+        [XmlIgnore]
+        private string status;
+
+        [XmlIgnore]
+        private bool canStop;
+
+        [XmlIgnore]
+        private string description;
+
+        [XmlIgnore]
+        private string startMode;
 
         public string DisplayName
         {
@@ -37,16 +28,11 @@ namespace Main.Models
             set { displayName = value; OnPropertyChanged(); }
         }
 
-        private string serviceName;
-
         public string ServiceName
         {
             get { return serviceName; }
             set { serviceName = value; OnPropertyChanged(); }
         }
-
-        [XmlIgnore]
-        private string status;
 
         public string Status
         {
@@ -54,17 +40,11 @@ namespace Main.Models
             set { status = value; OnPropertyChanged(); }
         }
 
-        [XmlIgnore]
-        private bool canStop;
-
         public bool CanStop
         {
             get { return canStop; }
             set { canStop = value; OnPropertyChanged(); }
         }
-
-        [XmlIgnore]
-        private string description;
 
         public string Description
         {
@@ -72,17 +52,10 @@ namespace Main.Models
             set { description = value; OnPropertyChanged(); }
         }
 
-        [XmlIgnore]
-        private string startMode;
-
         public string StartMode
         {
             get { return startMode; }
             set { startMode = value; OnPropertyChanged(); }
         }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string propName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
 }

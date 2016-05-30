@@ -84,12 +84,12 @@
     <Compile Include="Models\ServiceItem.cs" />
     <Compile Include="Models\ServiceManager.cs" />
     <Compile Include="Shared\IFrameNavigationService.cs" />
+    <Compile Include="Shared\NotifyClass.cs" />
     <Compile Include="Shared\ServiceHelper.cs" />
     <Compile Include="Shared\StartModeEnum.cs" />
     <Compile Include="ViewModels\AddViewModel.cs" />
     <Compile Include="ViewModels\FrameNavigationService .cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="MainFrame.xaml.cs">
       <DependentUpon>MainFrame.xaml</DependentUpon>

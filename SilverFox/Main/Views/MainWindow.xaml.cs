@@ -8,16 +8,13 @@ using System.Windows.Media;
 
 namespace Main.Views
 {
-
     public partial class MainWindow : Page
     {
-      
         public MainWindow()
         {
             InitializeComponent();
 
-         App.Current.MainWindow.Closing += new CancelEventHandler(callVMSaveCommand);
-
+            App.Current.MainWindow.Closing += new CancelEventHandler(callVMSaveCommand);
         }
 
         private void callVMSaveCommand(object sender, CancelEventArgs e)
@@ -27,27 +24,15 @@ namespace Main.Views
                 viewModel.WindowClosingCommand.Execute(null);
         }
 
-
-    
-
-
-
-
-
-
-
-
-
-
         private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
-
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 DataGridRow row = GetVisualParentByType((FrameworkElement)e.OriginalSource, typeof(DataGridRow)) as DataGridRow;
 
                 row.IsSelected = !row.IsSelected;
                 e.Handled = true;
+
             }
         }
 
@@ -60,9 +45,9 @@ namespace Main.Views
                 row.IsSelected = !row.IsSelected;
                 e.Handled = true;
 
+
             }
         }
-
 
         public static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
         {
@@ -78,14 +63,13 @@ namespace Main.Views
             return parent;
         }
 
+
         private void ClearMultiselBtn_Click(object sender, RoutedEventArgs e)
         {
             ServicesGrid.UnselectAll();
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-
-        }
+      
+       
     }
 }
