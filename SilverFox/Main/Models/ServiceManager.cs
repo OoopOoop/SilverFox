@@ -126,10 +126,8 @@ namespace Main.Models
 
         public static void ChangeStartMode(ServiceItem item, string changeTo)
         {
-            try
-            {
-                var controller = GetService(item);
-                ServiceStartMode mode;
+            var controller = GetService(item);
+            ServiceStartMode mode;
                 switch (changeTo)
                 {
                     case "Automatic":
@@ -147,12 +145,6 @@ namespace Main.Models
                 }
 
                 ServiceHelper.ChangeStartMode(controller, mode);
-            }
-
-            catch
-            {
-
-            }
         }
 
         public static Task<List<ServiceItem>> GetSavedServiceItems()
@@ -182,20 +174,11 @@ namespace Main.Models
 
         public static void SetSavedServiceItems(List<ServiceItem> items)
         {
-                try
-                {
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
+                  XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
                     using (TextWriter textWriter = new StreamWriter(fileName))
                     {
                         xmlSerializer.Serialize(textWriter, items);
                     }
-
-                }
-                catch 
-                {
-                    return;
-                }
-            
         }
         
 

@@ -12,6 +12,9 @@ namespace Main.ViewModels
 {
     public class MainViewModel:NotifyClass
     {
+
+    
+
         private string _status;
         private RelayCommand<object> _rerfreshselectedStatusCommand;
         private ObservableCollection<ServiceItem> _selectedServicesCollection;
@@ -32,7 +35,9 @@ namespace Main.ViewModels
             set { _selectedServicesCollection = value; OnPropertyChanged(); }
         }
 
-        //Updates status of single or multiple selected services
+        /// <summary>
+        /// Updates status of single or multiple selected services
+        /// </summary>
         public RelayCommand<object> RefreshSelectedStatusCommand => _rerfreshselectedStatusCommand ?? (_rerfreshselectedStatusCommand = new RelayCommand<object>(
            obj =>
            {
@@ -47,7 +52,9 @@ namespace Main.ViewModels
                }
            }));
 
-        //remove selected services from the datagrid
+        /// <summary>
+        /// Remove selected services from the datagrid
+        /// </summary>
         public RelayCommand<object> RemoveServiceCommand => _removeServiceCommand ?? (_removeServiceCommand = new RelayCommand<object>(
             obj =>
             {
@@ -63,6 +70,9 @@ namespace Main.ViewModels
 
         public RelayCommand RefreshAllStatusCommand => _refreshAllStatusCommand ?? (_refreshAllStatusCommand = new RelayCommand(refreshAllServicesStatus));
 
+        /// <summary>
+        /// Stop selected service
+        /// </summary>
         public RelayCommand<object> StopServiceCommand => _stopServiceCommand ?? (_stopServiceCommand = new RelayCommand<object>(
             obj =>
             {
@@ -77,6 +87,10 @@ namespace Main.ViewModels
                 }
             }));
 
+
+        /// <summary>
+        /// Start selected service 
+        /// </summary>
         public RelayCommand<object> StartServiceCommand => _startServiceCommand ?? (_startServiceCommand = new RelayCommand<object>(
             obj =>
             {
@@ -91,21 +105,16 @@ namespace Main.ViewModels
                 }
             }));
 
-        public RelayCommand<object> ChangeStatusCommand => _changeStatusCommand ?? (_changeStatusCommand = new RelayCommand<object>(
-            obj =>
-            {
-                var servChngStatus = obj as IEnumerable;
-                if (servChngStatus != null && _status != String.Empty)
-                {
-                    servChngStatus.Cast<ServiceItem>().ToList().ForEach(service =>
-                    {
-                        ServiceManager.ChangeStartMode(service, _status);
-                        service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
-                    });
-                }
-            }));
 
-        // get "automatic" "manual" or "disabled" status  from radiobuttons
+        /// <summary>
+        /// Change startup command to "manual", "disabled" or "auto"
+        /// </summary>
+        public RelayCommand<object> ChangeStatusCommand => _changeStatusCommand ?? (_changeStatusCommand = new RelayCommand<object>(changeStatus));
+
+
+        /// <summary>
+        /// Get "automatic" "manual" or "disabled" parameters from radiobuttons
+        /// </summary>
         public RelayCommand<string> ChangeStartupCommand => _changeStartupCommand ?? (_changeStartupCommand = new RelayCommand<string>(
          status =>
          {
@@ -139,7 +148,9 @@ namespace Main.ViewModels
             refreshAllServicesStatus();
         }
 
-        // get services from addWindow
+        /// <summary>
+        /// Get selected services from the addWindow
+        /// </summary>
         private void displaySelectedServices()
         {
             Messenger.Default.Register<ObservableCollection<ServiceItem>>(
@@ -181,8 +192,10 @@ namespace Main.ViewModels
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             }
         }
-        
-        //refresh all services in datagrid selected or not
+
+        /// <summary>
+        /// Refresh all services in datagrid selected or not
+        /// </summary>
         private void refreshAllServicesStatus()
         {
             if (SelectedServicesCollection.Count != 0)
@@ -191,6 +204,29 @@ namespace Main.ViewModels
                 {
                     service.Status = ServiceManager.RefreshStatus(service).Status;
                 }
+            }
+        }
+
+
+
+        private void changeStatus(object obj)
+        {
+            var servChngStatus = obj as IEnumerable;
+            if (servChngStatus != null && _status != String.Empty)
+            {
+                servChngStatus.Cast<ServiceItem>().ToList().ForEach(service =>
+                {
+                    try
+                    {
+                        ServiceManager.ChangeStartMode(service, _status);
+                        service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
+                    }
+                    catch (Exception ex)
+                    {
+                        string exceptionMessage = "Could not change service start type";
+                        string win32Exception = ex.Message;
+                    }
+                });
             }
         }
     }

@@ -34,12 +34,12 @@
                   ItemsSource="{Binding RunningServicesCollection}"
                   SelectionMode="Extended">
 
-            <DataGrid.RowStyle>
+            <!--<DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseEnter" Handler="MouseEnterHandler" />
                     <EventSetter Event="PreviewMouseDown" Handler="PreviewMouseDownHandler" />
                 </Style>
-            </DataGrid.RowStyle>
+            </DataGrid.RowStyle>-->
 
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
