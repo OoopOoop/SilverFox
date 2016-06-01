@@ -16,11 +16,21 @@ namespace Main.ViewModels
         private RelayCommand<object> _sendSelectedServices;
         private RelayCommand _loadServicesCommand;
 
+        private RelayCommand _cancelAndGoBackCommand;
+        
+
         public ObservableCollection<ServiceItem> RunningServicesCollection
         {
             get { return _runningServicesCollection; }
             set { _runningServicesCollection = value; OnPropertyChanged(); }
         }
+
+
+        public RelayCommand CancelAndGoBackCommand => _cancelAndGoBackCommand ?? (_cancelAndGoBackCommand = new RelayCommand(
+           () =>
+           {
+               _navigationService.NavigateTo("MainWindow");
+           }));
 
         public RelayCommand LoadServicesCommand => _loadServicesCommand ?? (_loadServicesCommand = new RelayCommand(
            async () =>

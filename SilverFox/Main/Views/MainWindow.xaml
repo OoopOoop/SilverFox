@@ -39,8 +39,6 @@
 
 
 
-
-
         <interactivity:Interaction.Triggers>
             <interactivity:EventTrigger EventName="Loaded">
                 <interactivity:InvokeCommandAction Command="{Binding LoadServicesCommand}" />
@@ -169,21 +167,31 @@
                                                           RelativeSource={RelativeSource FindAncestor,
                                                                                          AncestorType={x:Type DataGridRow}}}" />
 
-
-
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="Auto" Header="Service Name">
+                <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center"
-                                       Text="{Binding Path=DisplayName,
-                                                      Mode=TwoWay,
-                                                      UpdateSourceTrigger=PropertyChanged}"
-                                       TextAlignment="Center"
-                                       TextWrapping="Wrap" />
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding Path=DisplayName,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap" />
+
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding Path=ServiceName,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged,
+                                                          StringFormat={}({0})}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -192,11 +200,45 @@
                 <DataGridTemplateColumn Width="*" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Description,
-                                                      Mode=TwoWay,
-                                                      UpdateSourceTrigger=PropertyChanged}"
-                                       TextAlignment="Left"
-                                       TextWrapping="Wrap" />
+                            <Grid>
+
+
+
+
+
+
+
+
+
+
+                                <TextBlock x:Name="DescrTxtBlock"
+                                           Text="{Binding Path=Description,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                           TextAlignment="Left"
+                                           TextWrapping="Wrap" />
+
+                                <TextBox x:Name="DescTextBox"
+                                         Text="{Binding Path=Description,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="Hidden" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

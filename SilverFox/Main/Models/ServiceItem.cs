@@ -5,21 +5,11 @@ namespace Main.Models
 {
     public class ServiceItem : NotifyClass
     {
-        private string serviceName;
-
-        [XmlIgnore]
-        private string displayName;
-
-        [XmlIgnore]
-        private string status;
-
-        [XmlIgnore]
-        private bool canStop;
-
-        [XmlIgnore]
+        private string serviceName;   
+        private string displayName;  
+        private string status;   
+       // private bool canStop;   
         private string description;
-
-        [XmlIgnore]
         private string startMode;
 
         public string DisplayName
@@ -34,17 +24,19 @@ namespace Main.Models
             set { serviceName = value; OnPropertyChanged(); }
         }
 
+        [XmlIgnore]
         public string Status
         {
             get { return status; }
             set { status = value; OnPropertyChanged(); }
         }
 
-        public bool CanStop
-        {
-            get { return canStop; }
-            set { canStop = value; OnPropertyChanged(); }
-        }
+        //[XmlIgnore]
+        //public bool CanStop
+        //{
+        //    get { return canStop; }
+        //    set { canStop = value; OnPropertyChanged(); }
+        //}
 
         public string Description
         {
@@ -52,6 +44,8 @@ namespace Main.Models
             set { description = value; OnPropertyChanged(); }
         }
 
+
+        [XmlIgnore]
         public string StartMode
         {
             get { return startMode; }

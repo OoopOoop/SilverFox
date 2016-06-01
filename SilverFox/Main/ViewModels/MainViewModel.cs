@@ -10,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace Main.ViewModels
 {
-    public class MainViewModel:NotifyClass
+    public class MainViewModel : NotifyClass
     {
-
-    
-
         private string _status;
         private RelayCommand<object> _rerfreshselectedStatusCommand;
         private ObservableCollection<ServiceItem> _selectedServicesCollection;
@@ -35,8 +32,18 @@ namespace Main.ViewModels
             set { _selectedServicesCollection = value; OnPropertyChanged(); }
         }
 
+        public RelayCommand RefreshAllStatusCommand => _refreshAllStatusCommand ?? (_refreshAllStatusCommand = new RelayCommand(refreshAllServicesStatus));
+
+        public RelayCommand<object> StopServiceCommand => _stopServiceCommand ?? (_stopServiceCommand = new RelayCommand<object>(stopService));
+
+        public RelayCommand<object> StartServiceCommand => _startServiceCommand ?? (_startServiceCommand = new RelayCommand<object>(startService));
+
+        public RelayCommand WindowClosingCommand => _windowClosingCommand ?? (_windowClosingCommand = new RelayCommand(saveServices));
+
+        public RelayCommand<object> ChangeStatusCommand => _changeStatusCommand ?? (_changeStatusCommand = new RelayCommand<object>(changeStatus));
+
         /// <summary>
-        /// Updates status of single or multiple selected services
+        /// Update status of single or multiple selected services
         /// </summary>
         public RelayCommand<object> RefreshSelectedStatusCommand => _rerfreshselectedStatusCommand ?? (_rerfreshselectedStatusCommand = new RelayCommand<object>(
            obj =>
@@ -68,50 +75,7 @@ namespace Main.ViewModels
                 }
             }));
 
-        public RelayCommand RefreshAllStatusCommand => _refreshAllStatusCommand ?? (_refreshAllStatusCommand = new RelayCommand(refreshAllServicesStatus));
-
-        /// <summary>
-        /// Stop selected service
-        /// </summary>
-        public RelayCommand<object> StopServiceCommand => _stopServiceCommand ?? (_stopServiceCommand = new RelayCommand<object>(
-            obj =>
-            {
-                var servToStop = obj as IEnumerable;
-                if (servToStop != null)
-                {
-                    servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
-                    {
-                        ServiceManager.StopService(service);
-                        service.Status = ServiceManager.RefreshStatus(service).Status;
-                    });
-                }
-            }));
-
-
-        /// <summary>
-        /// Start selected service 
-        /// </summary>
-        public RelayCommand<object> StartServiceCommand => _startServiceCommand ?? (_startServiceCommand = new RelayCommand<object>(
-            obj =>
-            {
-                var servToStop = obj as IEnumerable;
-                if (servToStop != null)
-                {
-                    servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
-                    {
-                        ServiceManager.StartService(service);
-                        service.Status = ServiceManager.RefreshStatus(service).Status;
-                    });
-                }
-            }));
-
-
-        /// <summary>
-        /// Change startup command to "manual", "disabled" or "auto"
-        /// </summary>
-        public RelayCommand<object> ChangeStatusCommand => _changeStatusCommand ?? (_changeStatusCommand = new RelayCommand<object>(changeStatus));
-
-
+     
         /// <summary>
         /// Get "automatic" "manual" or "disabled" parameters from radiobuttons
         /// </summary>
@@ -120,36 +84,30 @@ namespace Main.ViewModels
          {
              _status = status;
          }));
-        
-        public RelayCommand WindowClosingCommand => _windowClosingCommand ?? (_windowClosingCommand = new RelayCommand(
-             () =>
-            {
-                 ServiceManager.SetSavedServiceItems(SelectedServicesCollection.ToList());
-            }));
-        
+           
         public RelayCommand NavigateAddWindowCommand => _navigateAddWindowCommand ?? (_navigateAddWindowCommand = new RelayCommand(
             () =>
             {
                 _navigationService.NavigateTo("AddWindow");
             }));
-        
+
         public RelayCommand LoadServicesCommand => _loadServicesCommand ?? (_loadServicesCommand = new RelayCommand(
             async () =>
             {
                 await getServices();
             }));
-      
+
 
         public MainViewModel(IFrameNavigationService navigationService)
         {
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             _navigationService = navigationService;
             displaySelectedServices();
-            refreshAllServicesStatus();
+          //  refreshAllServicesStatus();
         }
 
         /// <summary>
-        /// Get selected services from the addWindow
+        /// Get selected services from the collection of services on the AddWindow
         /// </summary>
         private void displaySelectedServices()
         {
@@ -159,22 +117,24 @@ namespace Main.ViewModels
                 {
                     foreach (ServiceItem service in services)
                     {
-                        SelectedServicesCollection.Add(service);
+                        if(!SelectedServicesCollection.Any(x=>x.DisplayName==service.DisplayName))
+                        {
+                            SelectedServicesCollection.Add(service);
+                        }
                     }
                 });
         }
-
 
         private async Task getServices()
         {
             if (SelectedServicesCollection.Count == 0)
             {
                 await getServicesDataAsync();
+                refreshAllServicesStatus();
             }
             return;
         }
-
-
+        
         private async Task getServicesDataAsync()
         {
             if (SelectedServicesCollection.Count != 0)
@@ -187,9 +147,32 @@ namespace Main.ViewModels
                 var collection = await ServiceManager.GetSavedServiceItems();
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>(collection);
             }
-            catch
+            catch(Exception ex)
             {
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>();
+
+                string caption = "Load error";
+                string exception = ex.Message;
+                string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
+                base.ShowMessage(exceptionMessage, caption);
+            }
+        }
+
+        /// <summary>
+        /// Save services in SelectedServicesCollection when programm closes
+        /// </summary>
+        private void saveServices()
+        {
+            try
+            {
+                ServiceManager.SetSavedServiceItems(SelectedServicesCollection.ToList());
+            }
+            catch (Exception ex)
+            {
+                string caption = "Save error";
+                string exception = ex.Message;
+                string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
+                base.ShowMessage(exceptionMessage, caption);
             }
         }
 
@@ -203,12 +186,14 @@ namespace Main.ViewModels
                 foreach (ServiceItem service in SelectedServicesCollection)
                 {
                     service.Status = ServiceManager.RefreshStatus(service).Status;
+                    service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
                 }
             }
         }
 
-
-
+        /// <summary>
+        /// Change startup command to "manual", "disabled" or "auto"
+        /// </summary>
         private void changeStatus(object obj)
         {
             var servChngStatus = obj as IEnumerable;
@@ -223,11 +208,78 @@ namespace Main.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        string exceptionMessage = "Could not change service start type";
-                        string win32Exception = ex.Message;
+                        string caption = "Startup type error";
+                        string exception = ex.Message;
+                        string exceptionMessage = String.Format("{0} {1} {2} {3} {4}", "Could not change", service.DisplayName, "service startup type","\n" + exception, "\n"+ex.InnerException??ex.InnerException.Message);
+                        base.ShowMessage(exceptionMessage, caption);
                     }
                 });
             }
         }
+
+        /// <summary>
+        /// Start selected service
+        /// </summary>
+        private void startService(object obj)
+        {
+            var servToStop = obj as IEnumerable;
+            if (servToStop != null)
+            {
+                servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
+                {
+                    try
+                    {
+                        ServiceManager.StartService(service);
+                        service.Status = ServiceManager.RefreshStatus(service).Status;
+                    }
+                    catch (Exception ex)
+                    {
+                        string caption = "Start service error";
+                        string exception = ex.Message;
+                        string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
+                        base.ShowMessage(exceptionMessage, caption);
+                    }
+                });
+            }
+        }
+
+        /// <summary>
+        /// Stop selected service
+        /// </summary>
+        private void stopService(object obj)
+        {
+            var servToStop = obj as IEnumerable;
+            if (servToStop != null)
+            {
+                servToStop.Cast<ServiceItem>().ToList().ForEach(service =>
+                {
+                    try
+                    {
+                        ServiceManager.StopService(service);
+                        service.Status = ServiceManager.RefreshStatus(service).Status;
+                    }
+                    catch (Exception ex)
+                    {
+                        string caption = "Stop service error";
+                        string exception = ex.Message;
+                        string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
+                        base.ShowMessage(exceptionMessage, caption);
+                    }
+                });
+            }
+        }
+
+
+
+        private RelayCommand _descriptionChangedCommand;
+        public RelayCommand DescriptionChangedCommand => _descriptionChangedCommand ?? (_descriptionChangedCommand = new RelayCommand(
+            () =>
+            {
+                throw new NotFiniteNumberException();
+
+            }
+            ));
+     
+
     }
 }

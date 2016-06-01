@@ -14,10 +14,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
 
         <interactivity:Interaction.Triggers>
             <interactivity:EventTrigger EventName="Loaded">
@@ -25,10 +25,17 @@
             </interactivity:EventTrigger>
         </interactivity:Interaction.Triggers>
 
+        <StackPanel Grid.Row="0" Margin="3">
+            <Button x:Name="ClearSelectionBtn"
+                    Width="70"
+                    Height="20"
+                    Click="ClearSelectionBtn_Click"
+                    Content="Clear Selected" />
+        </StackPanel>
 
         <DataGrid x:Name="ServicesGrid"
-                  Grid.Row="0"
-                  Margin="10,10,10,0"
+                  Grid.Row="1"
+                  Margin="5"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   ItemsSource="{Binding RunningServicesCollection}"
@@ -68,12 +75,27 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="Auto" Header="Service Name">
+                <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center"
-                                       Text="{Binding DisplayName}"
-                                       TextAlignment="Center" />
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding Path=DisplayName,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap" />
+
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding Path=ServiceName,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged,
+                                                          StringFormat={}({0})}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -101,14 +123,25 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="1" Margin="5">
-            <Button Name="addServiceButton"
+
+        <StackPanel Grid.Row="2"
+                    Margin="3"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+            <Button Name="AddServiceButton"
                     Width="70"
                     Height="20"
+                    Margin="3"
                     Command="{Binding SendSelectedServices}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
                     Content="Add Service" />
+            <Button Name="CancelAndGoBackBtn"
+                    Width="70"
+                    Height="20"
+                    Margin="3"
+                    Command="{Binding CancelAndGoBackCommand}"
+                    Content="Cancel" />
         </StackPanel>
     </Grid>
 </Page>
