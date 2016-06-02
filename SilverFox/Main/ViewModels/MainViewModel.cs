@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Main.ViewModels
 {
-    public class MainViewModel : NotifyClass
+    public class MainViewModel : NotifyService
     {
         private string _status;
         private RelayCommand<object> _rerfreshselectedStatusCommand;
@@ -103,7 +103,7 @@ namespace Main.ViewModels
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             _navigationService = navigationService;
             displaySelectedServices();
-          //  refreshAllServicesStatus();
+            // refreshAllServicesStatus();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Main.ViewModels
                 string caption = "Load error";
                 string exception = ex.Message;
                 string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
-                base.ShowMessage(exceptionMessage, caption);
+                base.ShowErrorMessage(exceptionMessage, caption);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Main.ViewModels
                 string caption = "Save error";
                 string exception = ex.Message;
                 string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
-                base.ShowMessage(exceptionMessage, caption);
+                base.ShowErrorMessage(exceptionMessage, caption);
             }
         }
 
@@ -211,7 +211,7 @@ namespace Main.ViewModels
                         string caption = "Startup type error";
                         string exception = ex.Message;
                         string exceptionMessage = String.Format("{0} {1} {2} {3} {4}", "Could not change", service.DisplayName, "service startup type","\n" + exception, "\n"+ex.InnerException??ex.InnerException.Message);
-                        base.ShowMessage(exceptionMessage, caption);
+                        base.ShowErrorMessage(exceptionMessage, caption);
                     }
                 });
             }
@@ -237,7 +237,7 @@ namespace Main.ViewModels
                         string caption = "Start service error";
                         string exception = ex.Message;
                         string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
-                        base.ShowMessage(exceptionMessage, caption);
+                        base.ShowErrorMessage(exceptionMessage, caption);
                     }
                 });
             }
@@ -263,23 +263,10 @@ namespace Main.ViewModels
                         string caption = "Stop service error";
                         string exception = ex.Message;
                         string exceptionMessage = String.Format("{0} {1}", exception, "\n" + ex.InnerException ?? ex.InnerException.Message);
-                        base.ShowMessage(exceptionMessage, caption);
+                        base.ShowErrorMessage(exceptionMessage, caption);
                     }
                 });
             }
         }
-
-
-
-        private RelayCommand _descriptionChangedCommand;
-        public RelayCommand DescriptionChangedCommand => _descriptionChangedCommand ?? (_descriptionChangedCommand = new RelayCommand(
-            () =>
-            {
-                throw new NotFiniteNumberException();
-
-            }
-            ));
-     
-
     }
 }

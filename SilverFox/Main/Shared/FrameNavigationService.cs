@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Main.Shared
 {
-    class FrameNavigationService : NotifyClass, IFrameNavigationService
+    class FrameNavigationService : NotifyService, IFrameNavigationService
     {
         private readonly Dictionary<string, Uri> _pagesByKey;
         private readonly List<string> _historic;

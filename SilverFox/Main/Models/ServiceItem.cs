@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Main.Models
 {
-    public class ServiceItem : NotifyClass
+    public class ServiceItem : NotifyService
     {
         private string serviceName;   
         private string displayName;  

@@ -9,7 +9,7 @@ namespace Main.Shared
 {
     public abstract  class MessageBoxService
     {
-        public void ShowMessage(string text, string caption)
+        public void ShowErrorMessage(string text, string caption)
         {
             System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
         }

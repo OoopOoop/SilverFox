@@ -25,13 +25,42 @@
             </interactivity:EventTrigger>
         </interactivity:Interaction.Triggers>
 
-        <StackPanel Grid.Row="0" Margin="3">
-            <Button x:Name="ClearSelectionBtn"
-                    Width="70"
+        <Grid Grid.Row="0" Margin="5,0,5,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Image Grid.Column="0"
+                   HorizontalAlignment="Left"
+                   Source="/Assets/Search-20.png" />
+
+            <TextBox x:Name="SearchTxtBlock"
+                     Grid.Column="1"
+                     Width="100" />
+
+            <Button x:Name="SearchBtn"
+                    Grid.Column="2"
+                    Width="50"
                     Height="20"
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding Path=Text,
+                                               ElementName=SearchTxtBlock}"
+                    Content="Search" />
+
+
+            <Button x:Name="ClearSelectionBtn"
+                    Grid.Column="3"
+                    Width="80"
+                    Height="20"
+                    HorizontalAlignment="Right"
                     Click="ClearSelectionBtn_Click"
                     Content="Clear Selected" />
-        </StackPanel>
+        </Grid>
 
         <DataGrid x:Name="ServicesGrid"
                   Grid.Row="1"

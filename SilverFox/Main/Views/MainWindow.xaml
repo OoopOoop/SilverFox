@@ -5,6 +5,7 @@
       xmlns:interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       xmlns:local="clr-namespace:Main.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:shared="clr-namespace:Main.Shared"
       Title="MainWindow"
       Width="Auto"
       Height="Auto"
@@ -201,42 +202,17 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-
-
-
-
-
-
-
-
-
-                                <TextBlock x:Name="DescrTxtBlock"
-                                           Text="{Binding Path=Description,
-                                                          Mode=TwoWay,
-                                                          UpdateSourceTrigger=PropertyChanged}"
-                                           TextAlignment="Left"
-                                           TextWrapping="Wrap" />
-
-                                <TextBox x:Name="DescTextBox"
+                                <TextBox x:Name="DescrTxtBlock"
                                          Text="{Binding Path=Description,
                                                         Mode=TwoWay,
                                                         UpdateSourceTrigger=PropertyChanged}"
-                                         Visibility="Hidden" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                         TextAlignment="Left"
+                                         TextWrapping="Wrap" />
 
                             </Grid>
                         </DataTemplate>

@@ -5,10 +5,13 @@ using Main.Shared;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Main.ViewModels
 {
-    public class AddViewModel : NotifyClass
+    public class AddViewModel : NotifyService
     {
         private IFrameNavigationService _navigationService;
         private ObservableCollection<ServiceItem> _runningServicesCollection;
@@ -56,16 +59,81 @@ namespace Main.ViewModels
                 _selectedService.Clear();
             }));
 
+
+      public  List <ServiceItem> Match;
+
         public AddViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
             _selectedService = new ObservableCollection<ServiceItem>();
             RunningServicesCollection = new ObservableCollection<ServiceItem>();
+
+
+
+            Match = new List<ServiceItem>();
         }
+
 
         private async Task<ObservableCollection<ServiceItem>> getRunningServices()
         {
             return RunningServicesCollection = await ServiceManager.GetAllServiceItems();
+        }
+
+        
+
+        private RelayCommand<string> _searchCommand;
+        public RelayCommand<string> SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand<string>(FindAndReplace));
+
+
+        private void FindAndReplace(string searchParameter)
+        {
+            if (!String.IsNullOrEmpty(searchParameter)&&RunningServicesCollection.Count!=0)
+            {
+
+                doSearch(searchParameter);
+
+                object test = null;
+            }
+        }
+
+
+
+
+
+
+        private List<ServiceItem> doSearch(string searchParameter)
+        {
+            string[] words = searchParameter.Split(' ');
+            foreach (string word in words)
+            {
+                foreach (ServiceItem service in RunningServicesCollection)
+                {
+
+                    //if (services.DisplayName.Contains(word) || services.ServiceName.Contains(word) )
+                    //{
+                    //    Match.Add(services);
+                    //}
+
+                    //if (services.Description.Contains(word))
+                    // {
+                    //     Match.Add(services);
+                    // }
+
+
+                    if (!String.IsNullOrEmpty(service.Description))
+                    {
+                       // Regex.Match(service.Description, word);
+
+                        if (Regex.IsMatch(service.Description, @"\b(COM)\b"))
+                        {
+                             Match.Add(service);
+                            //RunningServicesCollection.Remove(service);
+                        }
+                    }
+                }
+            }
+
+            return Match;
         }
     }
 }
