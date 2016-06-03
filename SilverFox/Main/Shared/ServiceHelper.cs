@@ -76,8 +76,10 @@ namespace Main.Shared
             {
                 int nError = Marshal.GetLastWin32Error();
                 var win32Exception = new Win32Exception(nError);
-                throw new ExternalException("Could not change service start type: "
-                    + win32Exception.Message);
+                //throw new ExternalException("Could not change service start type: "
+                //    + win32Exception.Message);
+
+                throw new ExternalException(win32Exception.Message);
             }
 
             CloseServiceHandle(serviceHandle);

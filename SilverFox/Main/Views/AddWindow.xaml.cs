@@ -25,59 +25,54 @@ namespace Main.Views
             InitializeComponent();
         }
 
-
-
-        //Activate rows MultiSelect in dataGrid
-        private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
+        private void ClearSelectionBtn_Click(object sender, RoutedEventArgs e)
         {
-        
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DataGridRow row = GetVisualParentByType((FrameworkElement)e.OriginalSource, typeof(DataGridRow)) as DataGridRow;
-
-                row.IsSelected = !row.IsSelected;
-                e.Handled = true;
-            }
-        }
-
-        private void MouseEnterHandler(object sender, MouseEventArgs e)
-        {
-            if (e.OriginalSource is DataGridRow && e.LeftButton == MouseButtonState.Pressed)
-            {
-                DataGridRow row = e.OriginalSource as DataGridRow;
-
-                row.IsSelected = !row.IsSelected;
-                e.Handled = true;
-                
-            }
+            ServicesGrid.UnselectAll();
         }
 
 
-        public static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
-        {
-            DependencyObject parent = startObject;
-            while (parent != null)
-            {
-                if (type.IsInstanceOfType(parent))
-                    break;
-                else
-                    parent = VisualTreeHelper.GetParent(parent);
-            }
 
-            return parent;
-        }
 
-        //private void ServicesGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+
+
+
+        //private void PreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         //{
-        //    var grid = sender as DataGrid;
-        //    var selected = grid.SelectedItems;
-
-        //    List<string> names = new List<string>();
-        //    foreach (var item in selected)
+        //    if (e.LeftButton == MouseButtonState.Pressed)
         //    {
-        //        var service = item as ServiceItem;
-        //        names.Add(service.DisplayName);
+        //        DataGridRow row = GetVisualParentByType((FrameworkElement)e.OriginalSource, typeof(DataGridRow)) as DataGridRow;
+
+        //        row.IsSelected = !row.IsSelected;
+        //        e.Handled = true;
+
         //    }
         //}
+
+        //private void MouseEnterHandler(object sender, MouseEventArgs e)
+        //{
+        //    if (e.OriginalSource is DataGridRow && e.LeftButton == MouseButtonState.Pressed)
+        //    {
+        //        DataGridRow row = e.OriginalSource as DataGridRow;
+
+        //        row.IsSelected = !row.IsSelected;
+        //        e.Handled = true;
+        //    }
+        //}
+
+        //public static DependencyObject GetVisualParentByType(DependencyObject startObject, Type type)
+        //{
+        //    DependencyObject parent = startObject;
+        //    while (parent != null)
+        //    {
+        //        if (type.IsInstanceOfType(parent))
+        //            break;
+        //        else
+        //            parent = VisualTreeHelper.GetParent(parent);
+        //    }
+
+        //    return parent;
+        //}
+        
     }
 }

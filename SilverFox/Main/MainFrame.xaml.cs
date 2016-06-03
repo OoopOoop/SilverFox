@@ -16,7 +16,6 @@ using System.Windows.Shapes;
 
 namespace Main
 {
- 
     public partial class MainFrame : Window
     {
         public MainFrame()

@@ -1,98 +1,94 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Management;
-using Main.Shared;
-using System.IO;
-using System.Xml.Serialization;
-using System.Xml;
-using System;
+﻿using Main.Shared;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Management;
+using System.ServiceProcess;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Main.Models
 {
-    //Make it static? (singletom)
     public static class ServiceManager
     {
-
-        const string fileName = "services.txt";
+        private const string fileName = "Savedservices.xml";
 
         public static ServiceController GetService(ServiceItem item)
         {
             var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
+           // var ServiceControllerService = ServiceController.GetServices().First((x) => x.DisplayName == item.DisplayName);
             return ServiceControllerService;
         }
 
         public static ManagementObject GetManagementObject(string serviceName)
         {
-           var wmiService = new ManagementObject("Win32_Service.Name='" + serviceName + "'");
-           wmiService.Get();
-           return wmiService;
+            var wmiService = new ManagementObject("Win32_Service.Name='" + serviceName + "'");
+            wmiService.Get();
+            return wmiService;
         }
 
+        /// <summary>
+        /// Start servcie
+        /// </summary>
+        /// <param name="item"></param>
         public static void StartService(ServiceItem item)
         {
-            //Start
-            var controller=GetService(item);
-            controller.Start();
-            controller.WaitForStatus(ServiceControllerStatus.Running);
-           
+            var controller = GetService(item);
+            if (controller.Status != ServiceControllerStatus.Running)
+            {
+                controller.Start();
+                controller.WaitForStatus(ServiceControllerStatus.Running);
+            }
         }
 
+        /// <summary>
+        /// Stop service
+        /// </summary>
+        /// <param name="item"></param>
         public static void StopService(ServiceItem item)
         {
-            //Stop
             var controller = GetService(item);
-            controller.Stop();
-            controller.WaitForStatus(ServiceControllerStatus.Stopped);
+            if (controller.Status != ServiceControllerStatus.Stopped)
+            {
+                controller.Stop();
+                controller.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
         }
 
-        public static void RefreshStatus(ServiceItem item)
+        /// <summary>
+        /// Update service status
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static ServiceItem RefreshStatus(ServiceItem item)
         {
-            // call it on startUp
-            // Update value of serviceItem status
+            var wmiService = GetManagementObject(item.ServiceName);
+
             var controller = GetService(item);
             controller.Refresh();
-        }
 
-        public static ObservableCollection<ServiceItem> GetAllServiceItems()
-        {
-            //get all currently running services
-            //var items = ServiceController.GetServices().Select(service => new ServiceItem
-            //{
-            //    ServiceName = service.ServiceName,
-            //    DisplayName = service.DisplayName,
-            //    Status = service.Status.ToString(),
-            //    CanStop = service.CanStop,
-            //    Description = GetManagementObject(service.ServiceName)["Description"].ToString(),
-            //    StartMode = GetManagementObject(service.ServiceName)["StartMode"].ToString(),
-            //}).ToList();
-            //return items;
+            string newStatus = controller.Status.ToString();
 
+            string newStartup = (string)wmiService["StartMode"];
 
-            ObservableCollection<ServiceItem> runningServices = new ObservableCollection<ServiceItem>();
-
-            var services = ServiceController.GetServices();
-            foreach (var service in services)
+            if (newStatus != item.Status)
             {
-                var wmiService = GetManagementObject(service.ServiceName);
-              
-                runningServices.Add(new ServiceItem
-                    {
-                        ServiceName = service.ServiceName,
-                        CanStop = service.CanStop,
-                        DisplayName = service.DisplayName,
-                        Status = service.Status.ToString(),
-                        Description = (string)wmiService["Description"],
-                        StartMode = (string)wmiService["StartMode"]
-                    });
+                item.Status = newStatus;
+            }
+            else if (newStartup != item.StartMode)
+            {
+                item.StartMode = newStartup;
             }
 
-            return runningServices;
+            return item;
         }
 
-
+        /// <summary>
+        /// Change service startup type
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="changeTo"></param>
         public static void ChangeStartMode(ServiceItem item, string changeTo)
         {
             var controller = GetService(item);
@@ -100,14 +96,17 @@ namespace Main.Models
             switch (changeTo)
             {
                 case "Automatic":
-                     mode=ServiceStartMode.Automatic;
-                        break;
+                    mode = ServiceStartMode.Automatic;
+                    break;
+
                 case "Manual":
                     mode = ServiceStartMode.Manual;
                     break;
+
                 case "Disabled":
                     mode = ServiceStartMode.Disabled;
                     break;
+
                 default:
                     mode = ServiceStartMode.Automatic;
                     break;
@@ -116,55 +115,68 @@ namespace Main.Models
             ServiceHelper.ChangeStartMode(controller, mode);
         }
 
+        /// <summary>
+        /// Read saved services from the file
+        /// </summary>
+        /// <returns></returns>
         public static Task<List<ServiceItem>> GetSavedServiceItems()
         {
-            //read a file with saved servies
             return Task.Run(() =>
             {
-                List<ServiceItem> savedServices = new List<ServiceItem>();
-                try
+                if (File.Exists(fileName))
                 {
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.Load(fileName);
-                    string xmlString = xmlDocument.OuterXml;
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
 
-                    using (StringReader read = new StringReader(xmlString))
+                    using (TextReader textReader = new StreamReader(fileName))
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
-
-                        using (XmlReader reader = new XmlTextReader(read))
-                        {
-                            savedServices = (List<ServiceItem>)serializer.Deserialize(reader);
-                            reader.Close();
-                        }
-                        read.Close();
+                        return (List<ServiceItem>)xmlSerializer.Deserialize(textReader);
                     }
                 }
-                catch
-                {
-                    savedServices = new List<ServiceItem>();
-                }
 
-                return savedServices;
+                return new List<ServiceItem>();
             });
         }
 
-
-        //Get reference to windows.storage
-        public static Task SetSavedServiceItems(List<ServiceItem> items)
+        /// <summary>
+        /// Write services to the file
+        /// </summary>
+        /// <param name="items"></param>
+        public static void SetSavedServiceItems(List<ServiceItem> items)
         {
-           return Task.Run(() =>
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
+            using (TextWriter textWriter = new StreamWriter(fileName))
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(typeof(List<ServiceItem>));
-                using (MemoryStream stream = new MemoryStream())
+                xmlSerializer.Serialize(textWriter, items);
+            }
+        }
+
+        /// <summary>
+        /// Get all running services
+        /// </summary>
+        /// <returns></returns>
+        public static Task<ObservableCollection<ServiceItem>> GetAllServiceItems()
+        {
+            return Task.Run(() =>
+            {
+                ObservableCollection<ServiceItem> runningServices = new ObservableCollection<ServiceItem>();
+
+                var services = ServiceController.GetServices();
+                foreach (var service in services)
                 {
-                    serializer.Serialize(stream, items);
-                    stream.Position = 0;
-                    xmlDocument.Load(stream);
-                    xmlDocument.Save(fileName);
-                    stream.Close();
+                    var wmiService = GetManagementObject(service.ServiceName);
+
+                    runningServices.Add(new ServiceItem
+                    {
+                        ServiceName = service.ServiceName,
+                        //CanStop = service.CanStop,
+                        DisplayName = service.DisplayName,
+                        Status = service.Status.ToString(),
+                        Description = (string)wmiService["Description"],
+                        StartMode = (string)wmiService["StartMode"]
+                    });
                 }
+
+                return runningServices;
             });
         }
     }

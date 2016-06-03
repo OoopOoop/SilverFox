@@ -1,37 +1,19 @@
-﻿using Main.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Main.ViewModels
+namespace Main.Shared
 {
-    class FrameNavigationService :  IFrameNavigationService, INotifyPropertyChanged
+    class FrameNavigationService : NotifyService, IFrameNavigationService
     {
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-
-
-
-
         private readonly Dictionary<string, Uri> _pagesByKey;
         private readonly List<string> _historic;
         private string _currentPageKey;
-                                                
+
         public string CurrentPageKey
         {
             get
@@ -47,12 +29,12 @@ namespace Main.ViewModels
                 }
 
                 _currentPageKey = value;
-                OnPropertyChanged("CurrentPageKey");
+                OnPropertyChanged();
             }
         }
         public object Parameter { get; private set; }
-      
-        
+
+
         public FrameNavigationService()
         {
             _pagesByKey = new Dictionary<string, Uri>();
@@ -83,12 +65,12 @@ namespace Main.ViewModels
                 //var frame = GetDescendantFromName(Application.Current.MainWindow, "MainWindow") as Frame;
 
 
-                var frame = GetDescendantFromName(Application.Current.MainWindow, "MainContent") as Frame;
+                var frame = GetDescendantFromName(Application.Current.MainWindow, "MainContent") as System.Windows.Controls.Frame;
 
                 if (frame != null)
                 {
                     frame.Source = _pagesByKey[pageKey];
-                    
+
                 }
                 Parameter = parameter;
                 _historic.Add(pageKey);
@@ -97,7 +79,6 @@ namespace Main.ViewModels
         }
 
         //"MainFrame"
-
         public void Configure(string key, Uri pageType)
         {
             lock (_pagesByKey)
