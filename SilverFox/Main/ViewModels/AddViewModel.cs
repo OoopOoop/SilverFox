@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Main.ViewModels
 {
@@ -16,19 +17,19 @@ namespace Main.ViewModels
         private IFrameNavigationService _navigationService;
         private ObservableCollection<ServiceItem> _runningServicesCollection;
         private ObservableCollection<ServiceItem> _selectedService;
+        private List<ServiceItem> _originalCollection;
         private RelayCommand<object> _sendSelectedServices;
         private RelayCommand _loadServicesCommand;
-
         private RelayCommand _cancelAndGoBackCommand;
-        
+        private RelayCommand<string> _searchCommand;
+
 
         public ObservableCollection<ServiceItem> RunningServicesCollection
         {
             get { return _runningServicesCollection; }
             set { _runningServicesCollection = value; OnPropertyChanged(); }
         }
-
-
+        
         public RelayCommand CancelAndGoBackCommand => _cancelAndGoBackCommand ?? (_cancelAndGoBackCommand = new RelayCommand(
            () =>
            {
@@ -39,6 +40,7 @@ namespace Main.ViewModels
            async () =>
            {
                await getRunningServices();
+               _originalCollection = new List<ServiceItem>(RunningServicesCollection);
            }));
 
         //Save and serialize selected services, go to the main page and pass the services
@@ -60,17 +62,11 @@ namespace Main.ViewModels
             }));
 
 
-      public  List <ServiceItem> Match;
-
         public AddViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
             _selectedService = new ObservableCollection<ServiceItem>();
             RunningServicesCollection = new ObservableCollection<ServiceItem>();
-
-
-
-            Match = new List<ServiceItem>();
         }
 
 
@@ -79,61 +75,44 @@ namespace Main.ViewModels
             return RunningServicesCollection = await ServiceManager.GetAllServiceItems();
         }
 
+        public RelayCommand<string> SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand<string>(findAndReplace));
+
+
+        private void findAndReplace(string searchParameter)
+        {
+            if (!String.IsNullOrEmpty(searchParameter)&&_originalCollection.Count!=0)
+            {
+                var returnColletion=doSearch(searchParameter);
+                RunningServicesCollection = new ObservableCollection<ServiceItem>(returnColletion);
+            }
+        }
+
         
-
-        private RelayCommand<string> _searchCommand;
-        public RelayCommand<string> SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand<string>(FindAndReplace));
-
-
-        private void FindAndReplace(string searchParameter)
+        private IEnumerable<ServiceItem> doSearch(string searchParameter)
         {
-            if (!String.IsNullOrEmpty(searchParameter)&&RunningServicesCollection.Count!=0)
+            //replace all non-numeric or non-word characters with a single space
+            searchParameter = Regex.Replace(searchParameter, "[^0-9 a-z]", " ");
+            //replace multiply spaces with a single space
+            searchParameter = Regex.Replace(searchParameter, @"\s+", " ");
+            //replace single space with "|" character
+            searchParameter = Regex.Replace(searchParameter, @"\s", "|");
+
+            string keywords = "(" + searchParameter + ")";
+
+            StringBuilder builder = new StringBuilder();
+
+            foreach (ServiceItem service in _originalCollection)
             {
+                string input = builder.Append(service.DisplayName).Append(" ").Append(service.ServiceName).Append(" ").Append(service.Description).ToString();
 
-                doSearch(searchParameter);
-
-                object test = null;
-            }
-        }
-
-
-
-
-
-
-        private List<ServiceItem> doSearch(string searchParameter)
-        {
-            string[] words = searchParameter.Split(' ');
-            foreach (string word in words)
-            {
-                foreach (ServiceItem service in RunningServicesCollection)
+                if (Regex.IsMatch(input, @"\b" + keywords + @"\b", RegexOptions.Singleline | RegexOptions.IgnoreCase))
                 {
-
-                    //if (services.DisplayName.Contains(word) || services.ServiceName.Contains(word) )
-                    //{
-                    //    Match.Add(services);
-                    //}
-
-                    //if (services.Description.Contains(word))
-                    // {
-                    //     Match.Add(services);
-                    // }
-
-
-                    if (!String.IsNullOrEmpty(service.Description))
-                    {
-                       // Regex.Match(service.Description, word);
-
-                        if (Regex.IsMatch(service.Description, @"\b(COM)\b"))
-                        {
-                             Match.Add(service);
-                            //RunningServicesCollection.Remove(service);
-                        }
-                    }
+                    yield return service;
                 }
-            }
 
-            return Match;
+                builder.Clear();
+            }
         }
+
     }
 }
