@@ -12,8 +12,7 @@ namespace Main.Models
 {
     public static class ServiceManager
     {
-        private const string fileName = "Savedservices.xml";
-
+     
         public static ServiceController GetService(ServiceItem item)
         {
             var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
@@ -115,19 +114,17 @@ namespace Main.Models
             ServiceHelper.ChangeStartMode(controller, mode);
         }
 
-        /// <summary>
-        /// Read saved services from the file
-        /// </summary>
-        /// <returns></returns>
+       
+
         public static Task<List<ServiceItem>> GetSavedServiceItems()
         {
             return Task.Run(() =>
             {
-                if (File.Exists(fileName))
+                if (File.Exists(Configuration.SavedServicesFileName))
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
 
-                    using (TextReader textReader = new StreamReader(fileName))
+                    using (TextReader textReader = new StreamReader(Configuration.SavedServicesFileName))
                     {
                         return (List<ServiceItem>)xmlSerializer.Deserialize(textReader);
                     }
@@ -137,14 +134,11 @@ namespace Main.Models
             });
         }
 
-        /// <summary>
-        /// Write services to the file
-        /// </summary>
-        /// <param name="items"></param>
+
         public static void SetSavedServiceItems(List<ServiceItem> items)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ServiceItem>));
-            using (TextWriter textWriter = new StreamWriter(fileName))
+            using (TextWriter textWriter = new StreamWriter(Configuration.SavedServicesFileName))
             {
                 xmlSerializer.Serialize(textWriter, items);
             }

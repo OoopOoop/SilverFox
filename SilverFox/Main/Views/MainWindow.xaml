@@ -15,7 +15,9 @@
 
 
     <Page.Resources>
-        <Style x:Key="EnableBtnStyle" TargetType="Button">
+        <Style x:Key="EnableBtnStyle"
+               BasedOn="{StaticResource {x:Type Button}}"
+               TargetType="Button">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ServicesGrid}" Value="0">
                     <Setter Property="IsEnabled" Value="False" />
@@ -44,21 +46,26 @@
             </interactivity:EventTrigger>
         </interactivity:Interaction.Triggers>
 
-        <StackPanel Grid.Row="0"
-                    Grid.Column="0"
-                    Orientation="Horizontal">
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
 
             <Button Name="GoToAddWinBtn"
-                    Width="80"
-                    Height="20"
+                    Grid.Column="0"
                     Command="{Binding NavigateAddWindowCommand}"
                     Content="Add" />
 
             <Button x:Name="DeleteSelectedSerBtn"
-                    Width="90"
-                    Height="20"
-                    Margin="5,0,0,0"
+                    Grid.Column="1"
                     Command="{Binding RemoveServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
@@ -66,9 +73,7 @@
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshSelectedSerBtn"
-                    Width="90"
-                    Height="20"
-                    Margin="5,0,0,0"
+                    Grid.Column="2"
                     Command="{Binding RefreshSelectedStatusCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
@@ -77,49 +82,17 @@
 
 
             <Button x:Name="RefreshAllSerBtn"
-                    Width="80"
-                    Height="20"
-                    Margin="5,0,0,0"
+                    Grid.Column="3"
                     Command="{Binding RefreshAllStatusCommand}"
                     Content="Refresh All"
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button Name="ClearMultiselBtn"
-                    Width="80"
-                    Height="20"
-                    Margin="5,0,0,0"
+                    Grid.Column="4"
                     Click="ClearMultiselBtn_Click"
                     Content="Clear Selection"
                     Style="{StaticResource EnableBtnStyle}" />
-        </StackPanel>
-
-
-        <StackPanel Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="1"
-                    Margin="5"
-                    Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Center" Text=" Status:" />
-
-            <Button x:Name="StartServiceBtn"
-                    Margin="5"
-                    Command="{Binding StartServiceCommand}"
-                    CommandParameter="{Binding SelectedItems,
-                                               ElementName=ServicesGrid}"
-                    Content="Start"
-                    Style="{StaticResource EnableBtnStyle}" />
-
-
-            <Button x:Name="StopServiceBtn"
-                    Margin="5"
-                    Command="{Binding StopServiceCommand}"
-                    CommandParameter="{Binding SelectedItems,
-                                               ElementName=ServicesGrid}"
-                    Content="Stop"
-                    Style="{StaticResource EnableBtnStyle}" />
-            <!--<Button Margin="5" Content="Pause" />
-            <Button Margin="5" Content="Resume" />-->
-        </StackPanel>
+        </Grid>
 
         <DataGrid x:Name="ServicesGrid"
                   Grid.Row="1"
@@ -135,40 +108,14 @@
 
 
 
-            <!--<DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseEnter" Handler="MouseEnterHandler" />
-                    <EventSetter Event="PreviewMouseDown" Handler="PreviewMouseDownHandler" />
-                </Style>
-            </DataGrid.RowStyle>-->
-
-
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Style.Triggers>
-                        <Trigger Property="DataGridCell.IsSelected" Value="True">
-                            <Setter Property="Background" Value="#CCDAFF" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>
-
-
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="Auto" Header="Select">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox x:Name="checkBox"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      IsChecked="{Binding IsSelected,
-                                                          Mode=TwoWay,
-                                                          RelativeSource={RelativeSource FindAncestor,
-                                                                                         AncestorType={x:Type DataGridRow}}}" />
+                <DataGridCheckBoxColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
+                                                          Path=IsSelected,
+                                                          Mode=TwoWay}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        Header="Select" />
 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
@@ -249,6 +196,31 @@
             </DataGrid.Columns>
         </DataGrid>
 
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5"
+                    Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" Text=" Status:" />
+
+            <Button x:Name="StartServiceBtn"
+                    Margin="5"
+                    Command="{Binding StartServiceCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
+                    Content="Start"
+                    Style="{StaticResource EnableBtnStyle}" />
+
+
+            <Button x:Name="StopServiceBtn"
+                    Margin="5"
+                    Command="{Binding StopServiceCommand}"
+                    CommandParameter="{Binding SelectedItems,
+                                               ElementName=ServicesGrid}"
+                    Content="Stop"
+                    Style="{StaticResource EnableBtnStyle}" />
+        </StackPanel>
+
         <StackPanel Grid.Row="2"
                     Grid.Column="1"
                     Margin="5"
@@ -283,18 +255,6 @@
                                                ElementName=ServicesGrid}"
                     Content="Apply"
                     Style="{StaticResource EnableBtnStyle}" />
-
-
-
-
-            <!--<Button.CommandParameter>
-                <MultiBinding Converter="{StaticResource StartupStatusConverter}">
-                    <Binding Path="SelectedItems" ElementName="ServicesGrid"/>
-                    <Binding Path="Content" ElementName="startUp"/>
-                </MultiBinding>
-            </Button.CommandParameter>-->
-
-
 
 
         </StackPanel>

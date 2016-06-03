@@ -1,4 +1,5 @@
-﻿using Main.Shared;
+﻿using MahApps.Metro.Controls;
+using Main.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ using System.Windows.Shapes;
 
 namespace Main
 {
-    public partial class MainFrame : Window
+    public partial class MainFrame : MetroWindow
     {
         public MainFrame()
         {

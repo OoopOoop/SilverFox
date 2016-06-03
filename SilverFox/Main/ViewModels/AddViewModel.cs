@@ -22,14 +22,23 @@ namespace Main.ViewModels
         private RelayCommand _loadServicesCommand;
         private RelayCommand _cancelAndGoBackCommand;
         private RelayCommand<string> _searchCommand;
-
+        private bool _isPRingActive;
 
         public ObservableCollection<ServiceItem> RunningServicesCollection
         {
             get { return _runningServicesCollection; }
             set { _runningServicesCollection = value; OnPropertyChanged(); }
         }
-        
+
+
+        public bool IsPRingActive
+        {
+            get { return _isPRingActive; }
+            set { _isPRingActive = value; OnPropertyChanged(); }
+        }
+
+
+
         public RelayCommand CancelAndGoBackCommand => _cancelAndGoBackCommand ?? (_cancelAndGoBackCommand = new RelayCommand(
            () =>
            {
@@ -39,8 +48,10 @@ namespace Main.ViewModels
         public RelayCommand LoadServicesCommand => _loadServicesCommand ?? (_loadServicesCommand = new RelayCommand(
            async () =>
            {
+               IsPRingActive = true;
                await getRunningServices();
                _originalCollection = new List<ServiceItem>(RunningServicesCollection);
+               IsPRingActive = false;
            }));
 
         //Save and serialize selected services, go to the main page and pass the services
@@ -59,6 +70,7 @@ namespace Main.ViewModels
                 Messenger.Default.Send(_selectedService);
                 _navigationService.NavigateTo("MainWindow");
                 _selectedService.Clear();
+                RunningServicesCollection.Clear();
             }));
 
 
@@ -72,6 +84,7 @@ namespace Main.ViewModels
 
         private async Task<ObservableCollection<ServiceItem>> getRunningServices()
         {
+
             return RunningServicesCollection = await ServiceManager.GetAllServiceItems();
         }
 
@@ -113,6 +126,5 @@ namespace Main.ViewModels
                 builder.Clear();
             }
         }
-
     }
 }

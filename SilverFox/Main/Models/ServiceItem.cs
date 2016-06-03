@@ -8,7 +8,6 @@ namespace Main.Models
         private string serviceName;   
         private string displayName;  
         private string status;   
-       // private bool canStop;   
         private string description;
         private string startMode;
 
@@ -31,12 +30,6 @@ namespace Main.Models
             set { status = value; OnPropertyChanged(); }
         }
 
-        //[XmlIgnore]
-        //public bool CanStop
-        //{
-        //    get { return canStop; }
-        //    set { canStop = value; OnPropertyChanged(); }
-        //}
 
         public string Description
         {

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace Main.Shared
 {
@@ -13,5 +14,6 @@ namespace Main.Shared
         {
             System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
         }
+
     }
 }
