@@ -88,7 +88,8 @@
     </ApplicationDefinition>
     <Compile Include="Models\ServiceItem.cs" />
     <Compile Include="Models\ServiceManager.cs" />
-    <Compile Include="Shared\Configuration.cs" />
+    <Compile Include="Shared\AppConfiguration.cs" />
+    <Compile Include="Shared\BackgroundToForegroundConverter.cs" />
     <Compile Include="Shared\FrameNavigationService.cs" />
     <Compile Include="Shared\IFrameNavigationService.cs" />
     <Compile Include="Shared\MessageBoxService.cs" />

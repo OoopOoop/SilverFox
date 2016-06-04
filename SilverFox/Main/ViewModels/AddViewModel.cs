@@ -2,13 +2,13 @@
 using GalaSoft.MvvmLight.Messaging;
 using Main.Models;
 using Main.Shared;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Main.ViewModels
 {
@@ -30,18 +30,17 @@ namespace Main.ViewModels
             set { _runningServicesCollection = value; OnPropertyChanged(); }
         }
 
-
         public bool IsPRingActive
         {
             get { return _isPRingActive; }
             set { _isPRingActive = value; OnPropertyChanged(); }
         }
 
-
-
         public RelayCommand CancelAndGoBackCommand => _cancelAndGoBackCommand ?? (_cancelAndGoBackCommand = new RelayCommand(
            () =>
            {
+               RunningServicesCollection = null;
+               _originalCollection = null;
                _navigationService.NavigateTo("MainWindow");
            }));
 
@@ -70,9 +69,9 @@ namespace Main.ViewModels
                 Messenger.Default.Send(_selectedService);
                 _navigationService.NavigateTo("MainWindow");
                 _selectedService.Clear();
-                RunningServicesCollection.Clear();
+                RunningServicesCollection = null;
+                _originalCollection = null;
             }));
-
 
         public AddViewModel(IFrameNavigationService navigationService)
         {
@@ -81,49 +80,40 @@ namespace Main.ViewModels
             RunningServicesCollection = new ObservableCollection<ServiceItem>();
         }
 
-
         private async Task<ObservableCollection<ServiceItem>> getRunningServices()
         {
-
             return RunningServicesCollection = await ServiceManager.GetAllServiceItems();
         }
 
         public RelayCommand<string> SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand<string>(findAndReplace));
 
-
         private void findAndReplace(string searchParameter)
         {
-            if (!String.IsNullOrEmpty(searchParameter)&&_originalCollection.Count!=0)
+            if (_originalCollection?.Count > 0)
             {
-                var returnColletion=doSearch(searchParameter);
-                RunningServicesCollection = new ObservableCollection<ServiceItem>(returnColletion);
+                //Search for nothing, means clear the search.
+                if (string.IsNullOrEmpty(searchParameter))
+                {
+                    RunningServicesCollection = new ObservableCollection<ServiceItem>(_originalCollection);
+                }
+                else
+                {
+                    RunningServicesCollection = new ObservableCollection<ServiceItem>(doSearch(searchParameter));
+                }
             }
         }
 
-        
         private IEnumerable<ServiceItem> doSearch(string searchParameter)
         {
-            //replace all non-numeric or non-word characters with a single space
-            searchParameter = Regex.Replace(searchParameter, "[^0-9 a-z]", " ");
-            //replace multiply spaces with a single space
-            searchParameter = Regex.Replace(searchParameter, @"\s+", " ");
-            //replace single space with "|" character
-            searchParameter = Regex.Replace(searchParameter, @"\s", "|");
-
-            string keywords = "(" + searchParameter + ")";
-
-            StringBuilder builder = new StringBuilder();
-
-            foreach (ServiceItem service in _originalCollection)
+            Regex searchMatch = new Regex(searchParameter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            foreach (var service in _originalCollection)
             {
-                string input = builder.Append(service.DisplayName).Append(" ").Append(service.ServiceName).Append(" ").Append(service.Description).ToString();
-
-                if (Regex.IsMatch(input, @"\b" + keywords + @"\b", RegexOptions.Singleline | RegexOptions.IgnoreCase))
+                if (searchMatch.IsMatch(service.DisplayName) ||
+                    searchMatch.IsMatch(service.ServiceName) ||
+                    searchMatch.IsMatch(service.Description ?? ""))
                 {
                     yield return service;
                 }
-
-                builder.Clear();
             }
         }
     }

@@ -35,41 +35,31 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-
             <Image Grid.Column="0"
                    HorizontalAlignment="Left"
                    Source="/Assets/Search-20.png" />
 
-
-
             <TextBox x:Name="SearchTxtBlock"
                      Grid.Column="1"
+                     Width="150"
+                     Margin="0,2,0,2"
                      Controls:TextBoxHelper.ClearTextButton="True"
-                     Controls:TextBoxHelper.Watermark="Search parameter" />
-
-
-            <Button x:Name="SearchBtn"
-                    Grid.Column="2"
-                    Command="{Binding SearchCommand}"
-                    CommandParameter="{Binding Path=Text,
-                                               ElementName=SearchTxtBlock}"
-                    Content="Search" />
-
-
-            <Button x:Name="ClearSelectionBtn"
-                    Grid.Column="3"
-                    HorizontalAlignment="Right"
-                    Click="ClearSelectionBtn_Click"
-                    Content="Clear Selected" />
+                     Controls:TextBoxHelper.Watermark="Search parameter"
+                     ToolTip="Regex match on service description and name">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter"
+                                Command="{Binding Path=SearchCommand}"
+                                CommandParameter="{Binding Path=Text,
+                                                           ElementName=SearchTxtBlock}" />
+                </TextBox.InputBindings>
+            </TextBox>
         </Grid>
-
 
         <Controls:ProgressRing Grid.Row="1"
                                Panel.ZIndex="1"
                                IsActive="{Binding IsPRingActive,
                                                   Mode=TwoWay,
                                                   UpdateSourceTrigger=PropertyChanged}" />
-
 
         <DataGrid x:Name="ServicesGrid"
                   Grid.Row="1"
@@ -79,20 +69,8 @@
                   ItemsSource="{Binding RunningServicesCollection}"
                   SelectionMode="Extended">
 
-
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
-                                                          Path=IsSelected,
-                                                          Mode=TwoWay}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Header="Add" />
-
-
-
-
-
-                <DataGridTemplateColumn Width="*" Header="Name">
+                <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel HorizontalAlignment="Center"
@@ -127,7 +105,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="*" Header="Status">
+                <DataGridTemplateColumn Width="Auto" Header="Status">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
@@ -136,21 +114,21 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
         </DataGrid>
-
 
         <StackPanel Grid.Row="2"
                     Margin="3"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
             <Button Name="AddServiceButton"
+                    Margin="2"
                     Command="{Binding SendSelectedServices}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
                     Content="Add Service" />
             <Button Name="CancelAndGoBackBtn"
+                    Margin="2"
                     Command="{Binding CancelAndGoBackCommand}"
                     Content="Cancel" />
         </StackPanel>

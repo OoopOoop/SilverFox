@@ -13,19 +13,24 @@
                             Source={StaticResource Locator}}"
       mc:Ignorable="d">
 
-
     <Page.Resources>
         <Style x:Key="EnableBtnStyle"
                BasedOn="{StaticResource {x:Type Button}}"
                TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Margin" Value="2" />
+            </Style.Setters>
+
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=ServicesGrid}" Value="0">
                     <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-    </Page.Resources>
 
+        <shared:BackgroundToForegroundConverter x:Key="ForegroundChangeColor" />
+
+    </Page.Resources>
 
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
@@ -37,8 +42,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-
 
         <interactivity:Interaction.Triggers>
             <interactivity:EventTrigger EventName="Loaded">
@@ -56,11 +59,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
-
             </Grid.ColumnDefinitions>
 
             <Button Name="GoToAddWinBtn"
                     Grid.Column="0"
+                    Margin="2"
                     Command="{Binding NavigateAddWindowCommand}"
                     Content="Add" />
 
@@ -80,17 +83,10 @@
                     Content="Refresh Selected"
                     Style="{StaticResource EnableBtnStyle}" />
 
-
             <Button x:Name="RefreshAllSerBtn"
                     Grid.Column="3"
                     Command="{Binding RefreshAllStatusCommand}"
                     Content="Refresh All"
-                    Style="{StaticResource EnableBtnStyle}" />
-
-            <Button Name="ClearMultiselBtn"
-                    Grid.Column="4"
-                    Click="ClearMultiselBtn_Click"
-                    Content="Clear Selection"
                     Style="{StaticResource EnableBtnStyle}" />
         </Grid>
 
@@ -106,17 +102,7 @@
                                         Mode=TwoWay}"
                   SelectionMode="Extended">
 
-
-
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
-                                                          Path=IsSelected,
-                                                          Mode=TwoWay}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Header="Select" />
-
-
                 <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -142,7 +128,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-
                 <DataGridTemplateColumn Width="*" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -158,13 +143,12 @@
                                                         UpdateSourceTrigger=PropertyChanged}"
                                          TextAlignment="Left"
                                          TextWrapping="Wrap" />
-
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="*" Header="Status">
+                <DataGridTemplateColumn Width="Auto" Header="Status">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
@@ -176,9 +160,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-
-
-                <DataGridTemplateColumn Width="*" Header="Start Mode">
+                <DataGridTemplateColumn Width="Auto" Header="Start Mode">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock VerticalAlignment="Center"
@@ -189,19 +171,22 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
-
-
-
             </DataGrid.Columns>
         </DataGrid>
 
-
-        <StackPanel Grid.Row="1"
+        <StackPanel x:Name="StartStopPanel"
+                    Grid.Row="1"
                     Grid.Column="1"
-                    Margin="5"
+                    Width="Auto"
+                    Height="Auto"
+                    Margin="5,10,5,5"
                     Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Center" Text=" Status:" />
+            <TextBlock HorizontalAlignment="Center"
+                       Foreground="{Binding ElementName=ServicesGrid,
+                                            Path=Background,
+                                            Converter={StaticResource ForegroundChangeColor},
+                                            Mode=TwoWay}"
+                       Text="Status" />
 
             <Button x:Name="StartServiceBtn"
                     Margin="5"
@@ -210,7 +195,6 @@
                                                ElementName=ServicesGrid}"
                     Content="Start"
                     Style="{StaticResource EnableBtnStyle}" />
-
 
             <Button x:Name="StopServiceBtn"
                     Margin="5"
@@ -223,10 +207,16 @@
 
         <StackPanel Grid.Row="2"
                     Grid.Column="1"
+                    Width="Auto"
+                    Height="Auto"
                     Margin="5"
                     Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Center" Text="Startup:" />
 
+            <TextBlock HorizontalAlignment="Center"
+                       Foreground="{Binding ElementName=ServicesGrid,
+                                            Path=Background,
+                                            Converter={StaticResource ForegroundChangeColor}}"
+                       Text="Startup" />
 
             <RadioButton Margin="5,10,5,5"
                          Command="{Binding ChangeStartupCommand}"
@@ -246,8 +236,6 @@
                          Content="Disabled"
                          GroupName="startUp" />
 
-
-
             <Button x:Name="changeStatusBtn"
                     Margin="5,15,5,0"
                     Command="{Binding ChangeStatusCommand}"
@@ -255,8 +243,6 @@
                                                ElementName=ServicesGrid}"
                     Content="Apply"
                     Style="{StaticResource EnableBtnStyle}" />
-
-
         </StackPanel>
     </Grid>
 </Page>

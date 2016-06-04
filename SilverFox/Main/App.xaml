@@ -8,46 +8,19 @@
              StartupUri="MainFrame.xaml">
 
     <Application.Resources>
-        <!--<ResourceDictionary>
-            <vm:ViewModelLocator xmlns:vm="clr-namespace:Main.ViewModels"
-                                 x:Key="Locator"
-                                 d:IsDataSource="True" />
-
-            <Style TargetType="DataGridColumnHeader">
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style>
-        </ResourceDictionary>-->
-
-
         <ResourceDictionary>
-
             <vm:ViewModelLocator xmlns:vm="clr-namespace:Main.ViewModels"
                                  x:Key="Locator"
                                  d:IsDataSource="True" />
-
-
             <ResourceDictionary.MergedDictionaries>
 
                 <!--  MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive!  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <!--  Accent and AppTheme setting  -->
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
 
-
-                <!--choices are blue, brown, cobalt, crimson, cyan, emerald, green, indigo, lime, magenta, mauve, olive, orange, pink, purple, red, sienna, steel, taupe, teal, violet, and yellow-->
-
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/pink.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
-
-
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
-
     </Application.Resources>
 </Application>

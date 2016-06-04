@@ -24,11 +24,5 @@ namespace Main.Views
         {
             InitializeComponent();
         }
-
-        private void ClearSelectionBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ServicesGrid.UnselectAll();
-        }
-
     }
 }
