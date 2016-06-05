@@ -29,13 +29,12 @@
         </Style>
 
         <shared:BackgroundToForegroundConverter x:Key="ForegroundChangeColor" />
-
     </Page.Resources>
 
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -174,21 +173,24 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel x:Name="StartStopPanel"
+        <StackPanel Orientation="Vertical"
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="1">
+
+            <StackPanel x:Name="StartStopPanel"
+
                     Width="Auto"
                     Height="Auto"
                     Margin="5,10,5,5"
                     Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Center"
+                <TextBlock HorizontalAlignment="Center"
                        Foreground="{Binding ElementName=ServicesGrid,
                                             Path=Background,
                                             Converter={StaticResource ForegroundChangeColor},
                                             Mode=TwoWay}"
                        Text="Status" />
 
-            <Button x:Name="StartServiceBtn"
+                <Button x:Name="StartServiceBtn"
                     Margin="5"
                     Command="{Binding StartServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
@@ -196,53 +198,53 @@
                     Content="Start"
                     Style="{StaticResource EnableBtnStyle}" />
 
-            <Button x:Name="StopServiceBtn"
+                <Button x:Name="StopServiceBtn"
                     Margin="5"
                     Command="{Binding StopServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
                     Content="Stop"
                     Style="{StaticResource EnableBtnStyle}" />
-        </StackPanel>
+            </StackPanel>
 
-        <StackPanel Grid.Row="2"
+            <StackPanel Grid.Row="1"
                     Grid.Column="1"
                     Width="Auto"
                     Height="Auto"
-                    Margin="5"
-                    Orientation="Vertical">
+                    Margin="5" VerticalAlignment="Top">
 
-            <TextBlock HorizontalAlignment="Center"
+                <TextBlock HorizontalAlignment="Center"
                        Foreground="{Binding ElementName=ServicesGrid,
                                             Path=Background,
                                             Converter={StaticResource ForegroundChangeColor}}"
                        Text="Startup" />
 
-            <RadioButton Margin="5,10,5,5"
+                <RadioButton Margin="5,10,5,5"
                          Command="{Binding ChangeStartupCommand}"
                          CommandParameter="Automatic"
                          Content="Automatic"
                          GroupName="startUp" />
 
-            <RadioButton Margin="5"
+                <RadioButton Margin="5"
                          Command="{Binding ChangeStartupCommand}"
                          CommandParameter="Manual"
                          Content="Manual"
                          GroupName="startUp" />
 
-            <RadioButton Margin="5"
+                <RadioButton Margin="5"
                          Command="{Binding ChangeStartupCommand}"
                          CommandParameter="Disabled"
                          Content="Disabled"
                          GroupName="startUp" />
 
-            <Button x:Name="changeStatusBtn"
+                <Button x:Name="changeStatusBtn"
                     Margin="5,15,5,0"
                     Command="{Binding ChangeStatusCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
                     Content="Apply"
                     Style="{StaticResource EnableBtnStyle}" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

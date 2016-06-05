@@ -37,7 +37,7 @@
 
             <Image Grid.Column="0"
                    HorizontalAlignment="Left"
-                   Source="/Assets/Search-20.png" />
+                   Source="/Assets/Search-20b.png" />
 
             <TextBox x:Name="SearchTxtBlock"
                      Grid.Column="1"
