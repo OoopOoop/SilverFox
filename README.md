@@ -26,20 +26,20 @@ Administrative privileges is required by the application to change service value
 ## Design Sketches
 
 |Main Page Sketch  |   Add Page Sketch   |
-|:----:|:--------------:|
+|:-----------------------:|:-------------------------:|
 |![scetch1](https://cloud.githubusercontent.com/assets/14425937/15806345/3b7a495a-2b39-11e6-8b5e-3d8edcc727ed.png)|![scetch2](https://cloud.githubusercontent.com/assets/14425937/15806346/3b7faf30-2b39-11e6-8307-ab0a1e8cb7d9.png)|
 
 
 ## Project Demo
 |Main Page                                  |                                        Add Page                     |
-|:--------------------------------------------------------:|:------------------------------------------------------------------------------------:|
-|![demoblue1](https://cloud.githubusercontent.com/assets/14425937/15806341/3b63f420-2b39-11e6-8829-ed5a08f9dad9.png)|![demoblue2](https://cloud.githubusercontent.com/assets/14425937/15806342/3b6833c8-2b39-11e6-8f20-bfa20edfc815.png)|
+|:-------------------------------------:|:------------------------------------------------------------------------------------:|
+|![blue1](https://cloud.githubusercontent.com/assets/14425937/15806674/8d0ce942-2b40-11e6-9c08-b392fb9bbe58.PNG)|![blue2](https://cloud.githubusercontent.com/assets/14425937/15806673/8d0adfe4-2b40-11e6-8e85-9c34f40d0829.PNG)|
 
 
 
 |Main Page                                 |                                        Add Page                   |
 |:--------------------------------------------------------:|:------------------------------------------------------------------------------------:|
-|![demoorange1](https://cloud.githubusercontent.com/assets/14425937/15806344/3b6f267e-2b39-11e6-9914-353cb33ba15c.png)|![demoorange2](https://cloud.githubusercontent.com/assets/14425937/15806343/3b6cd298-2b39-11e6-90d0-3fc82fcfb0b6.png)|
+|![orange1](https://cloud.githubusercontent.com/assets/14425937/15806675/8d0d81f4-2b40-11e6-8848-41cd94f2eb10.PNG)|![orange2](https://cloud.githubusercontent.com/assets/14425937/15806676/8d104f06-2b40-11e6-8eed-efc728755f74.PNG)|
 
 
 ## Motivation
