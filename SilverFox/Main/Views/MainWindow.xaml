@@ -85,8 +85,7 @@
             <Button x:Name="RefreshAllSerBtn"
                     Grid.Column="3"
                     Command="{Binding RefreshAllStatusCommand}"
-                    Content="Refresh All"
-                    />
+                    Content="Refresh All" />
         </Grid>
 
         <DataGrid x:Name="ServicesGrid"
@@ -130,19 +129,11 @@
                 <DataGridTemplateColumn Width="*" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox x:Name="DescrTxtBlock"
+                            <TextBlock x:Name="DescrTxtBlock"
                                          Text="{Binding Path=Description,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                                        Mode=OneWay}"
                                          TextAlignment="Left"
-                                         TextWrapping="Wrap" />
-                            </Grid>
+                                         TextWrapping="NoWrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
