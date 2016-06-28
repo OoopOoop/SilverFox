@@ -157,11 +157,15 @@ namespace Main.Models
                     runningServices.Add(new ServiceItem
                     {
                         ServiceName = service.ServiceName,
-                        //CanStop = service.CanStop,
                         DisplayName = service.DisplayName,
                         Status = service.Status.ToString(),
                         Description = (string)wmiService["Description"],
-                        StartMode = (string)wmiService["StartMode"]
+                        StartMode = (string)wmiService["StartMode"],
+
+                        DisplayName_original = service.DisplayName,
+                        Description_original = (string)wmiService["Description"] ?? "",
+                        StartMode_original = (string)wmiService["StartMode"]
+
                     });
                 }
 

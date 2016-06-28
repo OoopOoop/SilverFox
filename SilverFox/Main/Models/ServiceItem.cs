@@ -30,13 +30,11 @@ namespace Main.Models
             set { status = value; OnPropertyChanged(); }
         }
 
-
         public string Description
         {
             get { return description; }
             set { description = value; OnPropertyChanged(); }
         }
-
 
         [XmlIgnore]
         public string StartMode
@@ -44,5 +42,13 @@ namespace Main.Models
             get { return startMode; }
             set { startMode = value; OnPropertyChanged(); }
         }
+
+        #region Original values
+
+        public string DisplayName_original { get; set; }
+        public string Description_original { get; set; }
+        public string StartMode_original { get; set; }
+
+        #endregion Original values
     }
 }
