@@ -35,7 +35,7 @@ namespace Main.Models
             if (controller.Status != ServiceControllerStatus.Running)
             {
                 controller.Start();
-                controller.WaitForStatus(ServiceControllerStatus.Running);
+                item.Status = controller.Status.ToString();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Main.Models
             if (controller.Status != ServiceControllerStatus.Stopped)
             {
                 controller.Stop();
-                controller.WaitForStatus(ServiceControllerStatus.Stopped);
+                item.Status = controller.Status.ToString();
             }
         }
 
