@@ -4,7 +4,7 @@
       <vm:ViewModelLocator xmlns:vm="clr-namespace:Main"
                            x:Key="Locator" />
   </Application.Resources>
-  
+
   In the View:
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 
@@ -48,18 +48,18 @@ namespace Main.ViewModels
 
             SetupNavigation();
 
-
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AddViewModel>();
+            SimpleIoc.Default.Register<EditViewModel>();
         }
 
-
-      private static void SetupNavigation()
+        private static void SetupNavigation()
         {
             var navigationService = new FrameNavigationService();
 
-            navigationService.Configure("MainWindow", new Uri("../Views/MainWindow.xaml",UriKind.Relative));
-            navigationService.Configure("AddWindow", new Uri("../Views/AddWindow.xaml",UriKind.Relative));
+            navigationService.Configure("MainWindow", new Uri("../Views/MainWindow.xaml", UriKind.Relative));
+            navigationService.Configure("AddWindow", new Uri("../Views/AddWindow.xaml", UriKind.Relative));
+            navigationService.Configure("EditWindow", new Uri("../Views/AddWindow.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
@@ -78,6 +78,14 @@ namespace Main.ViewModels
             get
             {
                 return ServiceLocator.Current.GetInstance<AddViewModel>();
+            }
+        }
+
+        public EditViewModel EditViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EditViewModel>();
             }
         }
 
