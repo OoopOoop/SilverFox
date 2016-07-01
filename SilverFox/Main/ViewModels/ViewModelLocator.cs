@@ -59,7 +59,7 @@ namespace Main.ViewModels
 
             navigationService.Configure("MainWindow", new Uri("../Views/MainWindow.xaml", UriKind.Relative));
             navigationService.Configure("AddWindow", new Uri("../Views/AddWindow.xaml", UriKind.Relative));
-            navigationService.Configure("EditWindow", new Uri("../Views/AddWindow.xaml", UriKind.Relative));
+            navigationService.Configure("EditWindow", new Uri("../Views/EditWindow.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);

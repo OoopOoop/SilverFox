@@ -1,13 +1,16 @@
 ﻿<Window x:Class="Main.Views.EditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Main.Views"
-        DataContext="{Binding EditViewModel, Source={StaticResource Locator}}"
-        mc:Ignorable="d"
-        Title="EditWindow" MinHeight="350" MinWidth="525">
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="EditWindow"
+        MinWidth="525"
+        MinHeight="350"
+        DataContext="{Binding EditViewModel,
+                              Source={StaticResource Locator}}"
+        mc:Ignorable="d">
     <StackPanel>
         <TextBlock x:Name="textBlock">
             <TextBlock.Text>
@@ -25,6 +28,6 @@
         <!--<TextBlock Text="{Binding ServiceItem.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding ServiceItem.Description_original, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
 
-        <!--http://stackoverflow.com/questions/17419570/bind-doubleclick-command-from-datagrid-row-to-vm-->
+        <!--  http://stackoverflow.com/questions/17419570/bind-doubleclick-command-from-datagrid-row-to-vm  -->
     </StackPanel>
 </Window>
