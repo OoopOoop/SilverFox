@@ -58,6 +58,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Button Name="GoToAddWinBtn"
@@ -66,8 +67,16 @@
                     Command="{Binding NavigateAddWindowCommand}"
                     Content="Add" />
 
-            <Button x:Name="DeleteSelectedSerBtn"
+            <Button Name="EditService"
                     Grid.Column="1"
+                    Command="{Binding EditServiceCommand}"
+                    CommandParameter="{Binding SelectedItem,
+                                               ElementName=ServicesGrid}"
+                    Content="Edit"
+                    Style="{StaticResource EnableBtnStyle}" />
+
+            <Button x:Name="DeleteSelectedSerBtn"
+                    Grid.Column="2"
                     Command="{Binding RemoveServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
@@ -75,7 +84,7 @@
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshSelectedSerBtn"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Command="{Binding RefreshSelectedStatusCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
@@ -83,7 +92,7 @@
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshAllSerBtn"
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Command="{Binding RefreshAllStatusCommand}"
                     Content="Refresh All" />
         </Grid>
@@ -130,10 +139,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock x:Name="DescrTxtBlock"
-                                         Text="{Binding Path=Description,
-                                                        Mode=OneWay}"
-                                         TextAlignment="Left"
-                                         TextWrapping="NoWrap" />
+                                       Text="{Binding Path=Description,
+                                                      Mode=OneWay}"
+                                       TextAlignment="Left"
+                                       TextWrapping="NoWrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -164,77 +173,77 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="1">
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Orientation="Vertical">
 
             <StackPanel x:Name="StartStopPanel"
-
-                    Width="Auto"
-                    Height="Auto"
-                    Margin="5,10,5,5"
-                    Orientation="Vertical">
+                        Width="Auto"
+                        Height="Auto"
+                        Margin="5,10,5,5"
+                        Orientation="Vertical">
                 <TextBlock HorizontalAlignment="Center"
-                       Foreground="{Binding ElementName=ServicesGrid,
-                                            Path=Background,
-                                            Converter={StaticResource ForegroundChangeColor},
-                                            Mode=TwoWay}"
-                       Text="Status" />
+                           Foreground="{Binding ElementName=ServicesGrid,
+                                                Path=Background,
+                                                Converter={StaticResource ForegroundChangeColor},
+                                                Mode=TwoWay}"
+                           Text="Status" />
 
                 <Button x:Name="StartServiceBtn"
-                    Margin="5"
-                    Command="{Binding StartServiceCommand}"
-                    CommandParameter="{Binding SelectedItems,
-                                               ElementName=ServicesGrid}"
-                    Content="Start"
-                    Style="{StaticResource EnableBtnStyle}" />
+                        Margin="5"
+                        Command="{Binding StartServiceCommand}"
+                        CommandParameter="{Binding SelectedItems,
+                                                   ElementName=ServicesGrid}"
+                        Content="Start"
+                        Style="{StaticResource EnableBtnStyle}" />
 
                 <Button x:Name="StopServiceBtn"
-                    Margin="5"
-                    Command="{Binding StopServiceCommand}"
-                    CommandParameter="{Binding SelectedItems,
-                                               ElementName=ServicesGrid}"
-                    Content="Stop"
-                    Style="{StaticResource EnableBtnStyle}" />
+                        Margin="5"
+                        Command="{Binding StopServiceCommand}"
+                        CommandParameter="{Binding SelectedItems,
+                                                   ElementName=ServicesGrid}"
+                        Content="Stop"
+                        Style="{StaticResource EnableBtnStyle}" />
             </StackPanel>
 
             <StackPanel Grid.Row="1"
-                    Grid.Column="1"
-                    Width="Auto"
-                    Height="Auto"
-                    Margin="5" VerticalAlignment="Top">
+                        Grid.Column="1"
+                        Width="Auto"
+                        Height="Auto"
+                        Margin="5"
+                        VerticalAlignment="Top">
 
                 <TextBlock HorizontalAlignment="Center"
-                       Foreground="{Binding ElementName=ServicesGrid,
-                                            Path=Background,
-                                            Converter={StaticResource ForegroundChangeColor}}"
-                       Text="Startup" />
+                           Foreground="{Binding ElementName=ServicesGrid,
+                                                Path=Background,
+                                                Converter={StaticResource ForegroundChangeColor}}"
+                           Text="Startup" />
 
                 <RadioButton Margin="5,10,5,5"
-                         Command="{Binding ChangeStartupCommand}"
-                         CommandParameter="Automatic"
-                         Content="Automatic"
-                         GroupName="startUp" />
+                             Command="{Binding ChangeStartupCommand}"
+                             CommandParameter="Automatic"
+                             Content="Automatic"
+                             GroupName="startUp" />
 
                 <RadioButton Margin="5"
-                         Command="{Binding ChangeStartupCommand}"
-                         CommandParameter="Manual"
-                         Content="Manual"
-                         GroupName="startUp" />
+                             Command="{Binding ChangeStartupCommand}"
+                             CommandParameter="Manual"
+                             Content="Manual"
+                             GroupName="startUp" />
 
                 <RadioButton Margin="5"
-                         Command="{Binding ChangeStartupCommand}"
-                         CommandParameter="Disabled"
-                         Content="Disabled"
-                         GroupName="startUp" />
+                             Command="{Binding ChangeStartupCommand}"
+                             CommandParameter="Disabled"
+                             Content="Disabled"
+                             GroupName="startUp" />
 
                 <Button x:Name="changeStatusBtn"
-                    Margin="5,15,5,0"
-                    Command="{Binding ChangeStatusCommand}"
-                    CommandParameter="{Binding SelectedItems,
-                                               ElementName=ServicesGrid}"
-                    Content="Apply"
-                    Style="{StaticResource EnableBtnStyle}" />
+                        Margin="5,15,5,0"
+                        Command="{Binding ChangeStatusCommand}"
+                        CommandParameter="{Binding SelectedItems,
+                                                   ElementName=ServicesGrid}"
+                        Content="Apply"
+                        Style="{StaticResource EnableBtnStyle}" />
             </StackPanel>
         </StackPanel>
     </Grid>

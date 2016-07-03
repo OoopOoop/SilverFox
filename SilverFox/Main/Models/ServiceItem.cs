@@ -10,6 +10,10 @@ namespace Main.Models
         private string status;   
         private string description;
         private string startMode;
+        private string originalDescription;
+        private string originalDisplayName;
+        private string originalStartMode;
+
 
         public string DisplayName
         {
@@ -22,6 +26,29 @@ namespace Main.Models
             get { return serviceName; }
             set { serviceName = value; OnPropertyChanged(); }
         }
+
+       
+        public string OriginalDescription
+        {
+            get { return originalDescription; }
+            set { originalDescription = value; }
+        }
+
+      
+        public string OriginalDisplayName
+        {
+            get { return originalDisplayName; }
+            set { originalDisplayName = value; }
+        }
+
+      
+        public string  OriginalStartMode
+        {
+            get { return originalStartMode; }
+            set { originalStartMode = value; }
+        }
+
+
 
         [XmlIgnore]
         public string Status
@@ -43,12 +70,6 @@ namespace Main.Models
             set { startMode = value; OnPropertyChanged(); }
         }
 
-        #region Original values
-
-        public string DisplayName_original { get; set; }
-        public string Description_original { get; set; }
-        public string StartMode_original { get; set; }
-
-        #endregion Original values
+      
     }
 }

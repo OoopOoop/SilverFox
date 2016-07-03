@@ -17,7 +17,7 @@ namespace Main.Views
     /// <summary>
     /// Interaction logic for EditWindow.xaml
     /// </summary>
-    public partial class EditWindow : Window
+    public partial class EditWindow : Page
     {
         public EditWindow()
         {

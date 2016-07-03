@@ -162,9 +162,9 @@ namespace Main.Models
                         Description = (string)wmiService["Description"],
                         StartMode = (string)wmiService["StartMode"],
 
-                        DisplayName_original = service.DisplayName,
-                        Description_original = (string)wmiService["Description"] ?? "",
-                        StartMode_original = (string)wmiService["StartMode"]
+                        OriginalDisplayName = service.DisplayName,
+                        OriginalDescription = (string)wmiService["Description"] ?? "",
+                        OriginalStartMode = (string)wmiService["StartMode"]
 
                     });
                 }

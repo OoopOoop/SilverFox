@@ -24,6 +24,7 @@ namespace Main.ViewModels
         private RelayCommand<string> _changeStartupCommand;
         private RelayCommand _navigateAddWindowCommand;
         private RelayCommand _windowClosingCommand;
+        private RelayCommand<object> _editServiceCommand;
         private IFrameNavigationService _navigationService;
 
         public ObservableCollection<ServiceItem> SelectedServicesCollection
@@ -58,6 +59,16 @@ namespace Main.ViewModels
                    });
                }
            }));
+
+
+        public RelayCommand<object> EditServiceCommand => _editServiceCommand ?? (_editServiceCommand = new RelayCommand<object>(
+            obj =>
+            {
+                _navigationService.NavigateTo("EditWindow",obj);
+            }));
+
+
+
 
         /// <summary>
         /// Remove selected services from the datagrid
