@@ -61,10 +61,16 @@ namespace Main.ViewModels
            }));
 
 
+
+        
+
         public RelayCommand<object> EditServiceCommand => _editServiceCommand ?? (_editServiceCommand = new RelayCommand<object>(
             obj =>
             {
-                _navigationService.NavigateTo("EditWindow",obj);
+
+                _navigationService.NavigateTo("EditWindow", obj);
+
+
             }));
 
 
@@ -109,10 +115,36 @@ namespace Main.ViewModels
             }));
 
 
+
+     
+
+
+        private void getServiceEdit()
+        {
+            Messenger.Default.Register<ServiceItem>(
+                this,
+                service =>
+                {
+                    if (SelectedServicesCollection.Any(x => x.OriginalDisplayName == service.OriginalDisplayName))
+                    {
+                        SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].DisplayName = service.DisplayName;
+                        SelectedServicesCollection[SelectedServicesCollection.IndexOf(service)].Description = service.Description;
+                    }
+                });
+        }
+
+
+
+
         public MainViewModel(IFrameNavigationService navigationService)
         {
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             _navigationService = navigationService;
+
+
+
+
+            getServiceEdit();
             displaySelectedServices();
             // refreshAllServicesStatus();
         }

@@ -88,7 +88,10 @@
 
         <TextBox x:Name="NewNameTxtBox"
                  Grid.Row="2"
-                 Grid.Column="1" />
+                 Grid.Column="1"
+                 Margin="3,0,-3,0"
+                 Text="{Binding NewDisplayName,
+                                Mode=TwoWay}" />
 
         <TextBlock Grid.Row="3"
                    Grid.ColumnSpan="2"
@@ -104,7 +107,9 @@
                    TextWrapping="Wrap" />
         <TextBox x:Name="NewDescription"
                  Grid.Row="4"
-                 Grid.Column="1" />
+                 Grid.Column="1"
+                 Text="{Binding NewDescription,
+                                Mode=TwoWay}" />
 
         <TextBlock Grid.Row="5"
                    Grid.ColumnSpan="2"
