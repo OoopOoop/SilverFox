@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Messaging;
 using Main.Models;
 using Main.Shared;
+using System;
 
 namespace Main.ViewModels
 {
@@ -14,36 +15,10 @@ namespace Main.ViewModels
         private string _newDescription;
         private RelayCommand _cancelCommand;
 
-        public ServiceItem ServiceItem
-        {
-            get
-            {
-                return _serviceItem;
-            }
-            set
-            {
-                _serviceItem = value;
-                OnPropertyChanged();
-               
-            }
-        }
-
-
-        //public string OriginalDisplayName { get; set; }
+     
+        public string OriginalDisplayName { get; set; }
         public string OriginalDescription { get; set; }
         public string OriginalStartType { get; set; }
-
-
-
-        private string originalDisplayName;
-
-        public string OriginalDisplayName
-        {
-            get { return originalDisplayName; }
-            set { originalDisplayName = value; OnPropertyChanged(); }
-        }
-
-
 
 
         public string NewDisplayName
@@ -59,32 +34,51 @@ namespace Main.ViewModels
             set { _newDescription = value; OnPropertyChanged(); }
         }
 
+        
 
         public RelayCommand SaveChangesCommand => _saveChangesCommand ?? (_saveChangesCommand = new RelayCommand(
             () => 
             {
-                ServiceItem.DisplayName = NewDisplayName;
-                ServiceItem.Description = NewDescription;
-                Messenger.Default.Send(ServiceItem);
+                _serviceItem.DisplayName = NewDisplayName;
+
+                if (!string.IsNullOrEmpty(NewDescription))
+                {
+                    _serviceItem.Description = NewDescription;
+                }
+                else
+                {
+                    if (base.ShowConfirmMessage("Leave Description field empty?", "Confirmation"))
+                    {
+                        _serviceItem.Description = NewDescription;
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                }
+
               
-               _navigationService.NavigateTo("MainWindow");
-
-
-             
-
+                Messenger.Default.Send(_serviceItem);
+                goToMainwindow();
             }
             ));
 
+
+
+        private void goToMainwindow()
+        {
+            _navigationService.NavigateTo("MainWindow");
+        }
 
        
 
         public RelayCommand CancelCommand => _cancelCommand ?? (_cancelCommand = new RelayCommand(
             () =>
             {
-                _navigationService.NavigateTo("MainWindow");
+                goToMainwindow();
             }
             ));
-
 
 
 
@@ -93,32 +87,18 @@ namespace Main.ViewModels
             this._navigationService = navigationService;
 
             if (this._navigationService.Parameter is ServiceItem)
-                ServiceItem = this._navigationService.Parameter as ServiceItem;
+                _serviceItem = this._navigationService.Parameter as ServiceItem;
+
+            
+            OriginalDisplayName = _serviceItem.OriginalDisplayName ?? "";
+            OriginalDescription = _serviceItem.OriginalDescription ?? "";
+            OriginalStartType = _serviceItem.OriginalStartMode ?? "";
 
 
 
-
-
-            //OriginalDisplayName = ServiceItem.OriginalDisplayName ?? "";
-            //OriginalDescription = ServiceItem.OriginalDescription ?? "";
-            //OriginalStartType = ServiceItem.OriginalStartMode ?? "";
-
+            //NewDisplayName = _serviceItem.DisplayName ?? "";
+            NewDisplayName = _serviceItem.DisplayName ?? OriginalDisplayName;
+            NewDescription = _serviceItem.Description??"";
         }
-
-
-
-        //private void editSelectedService()
-        //{
-        //    Messenger.Default.Register<ServiceItem>(
-        //     this,
-        //      service =>
-        //      {
-        //          //OriginalDisplayName = service.OriginalDisplayName ?? "";
-        //          //OriginalDescription = service.OriginalDescription ?? "";
-        //          //OriginalStartType = service.OriginalStartMode ?? "";
-        //          if(service!=null)
-        //          ServiceItem = service;
-        //      });
-        //}
     }
 }

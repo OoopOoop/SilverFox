@@ -73,9 +73,7 @@ namespace Main.ViewModels
 
             }));
 
-
-
-
+        
         /// <summary>
         /// Remove selected services from the datagrid
         /// </summary>
@@ -187,6 +185,7 @@ namespace Main.ViewModels
 
             try
             {
+
                 var collection = await ServiceManager.GetSavedServiceItems();
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>(collection);
             }
@@ -224,12 +223,22 @@ namespace Main.ViewModels
         /// </summary>
         private void refreshAllServicesStatus()
         {
+            //TODO: check if services still exists, if not remove from the list and send a  message
+
             if (SelectedServicesCollection.Count != 0)
             {
                 foreach (ServiceItem service in SelectedServicesCollection)
                 {
-                    service.Status = ServiceManager.RefreshStatus(service).Status;
-                    service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
+                    if(ServiceManager.IsServiceExists(service.ServiceName))
+                    {
+                        service.Status = ServiceManager.RefreshStatus(service).Status;
+                        service.StartMode = ServiceManager.RefreshStatus(service).StartMode;
+                    }
+                    else
+                    {
+                        SelectedServicesCollection.Remove(service);
+                        base.ShowErrorMessage(service.ServiceName +" " +"was removed", "error loading list of services");
+                    }
                 }
             }
         }

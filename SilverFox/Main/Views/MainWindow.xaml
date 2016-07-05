@@ -69,6 +69,7 @@
 
             <Button Name="EditService"
                     Grid.Column="1"
+                    Margin="4,2,0,2"
                     Command="{Binding EditServiceCommand}"
                     CommandParameter="{Binding SelectedItem,
                                                ElementName=ServicesGrid}"
@@ -107,7 +108,14 @@
                   ColumnWidth="*"
                   ItemsSource="{Binding SelectedServicesCollection,
                                         Mode=TwoWay}"
-                  SelectionMode="Extended">
+                  SelectionMode="Extended"
+                  Unloaded="ServicesGrid_Unloaded">
+
+            <interactivity:Interaction.Triggers>
+                <interactivity:EventTrigger EventName="MouseDoubleClick">
+                    <interactivity:InvokeCommandAction Command="{Binding EditServiceCommand}" CommandParameter="{Binding SelectedItem, ElementName=ServicesGrid}" />
+                </interactivity:EventTrigger>
+            </interactivity:Interaction.Triggers>
 
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" Header="Name">

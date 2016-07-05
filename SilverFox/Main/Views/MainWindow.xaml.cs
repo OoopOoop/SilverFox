@@ -33,5 +33,10 @@ namespace Main.Views
 
         }
 
+        private void ServicesGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var grid = (DataGrid)sender;
+            grid.CommitEdit(DataGridEditingUnit.Row, true);
+        }
     }
 }

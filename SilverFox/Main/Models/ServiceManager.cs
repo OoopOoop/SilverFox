@@ -1,4 +1,5 @@
 ﻿using Main.Shared;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -12,6 +13,30 @@ namespace Main.Models
 {
     public static class ServiceManager
     {
+        
+        public static bool IsServiceExists(string serviceName)
+        {
+            ServiceController controller = null;
+
+            try
+            {
+                controller = new ServiceController(serviceName);
+                return true;
+            }
+            catch(InvalidOperationException)
+            {
+                return false;
+            }
+           finally
+            {
+                if (controller != null)
+                {
+                    controller.Dispose();
+                }
+            }
+        }
+
+
         public static ServiceController GetService(ServiceItem item)
         {
             var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);

@@ -85,7 +85,7 @@ namespace Main.ViewModels
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<EditViewModel>();
+                return ServiceLocator.Current.GetInstance<EditViewModel>(Guid.NewGuid().ToString());
             }
         }
 

@@ -15,6 +15,7 @@ namespace Main.Models
         private string originalStartMode;
 
 
+
         public string DisplayName
         {
             get { return displayName; }
@@ -69,7 +70,6 @@ namespace Main.Models
             get { return startMode; }
             set { startMode = value; OnPropertyChanged(); }
         }
-
-      
+        
     }
 }
