@@ -60,17 +60,13 @@ namespace Main.ViewModels
                }
            }));
 
-
-
-        
-
+        /// <summary>
+        /// Send selected service to the EditViewModel and navigate to the Edit page
+        /// </summary>
         public RelayCommand<object> EditServiceCommand => _editServiceCommand ?? (_editServiceCommand = new RelayCommand<object>(
-            obj =>
+            serviceToEdit =>
             {
-
-                _navigationService.NavigateTo("EditWindow", obj);
-
-
+                _navigationService.NavigateTo("EditWindow", serviceToEdit);
             }));
 
         
@@ -106,17 +102,17 @@ namespace Main.ViewModels
                 _navigationService.NavigateTo("AddWindow");
             }));
 
+
         public RelayCommand LoadServicesCommand => _loadServicesCommand ?? (_loadServicesCommand = new RelayCommand(
             async () =>
             {
                 await getServices();
             }));
 
-
-
-     
-
-
+        
+        /// <summary>
+        /// Receive edited service from the EditViewModel
+        /// </summary>
         private void getServiceEdit()
         {
             Messenger.Default.Register<ServiceItem>(
@@ -139,12 +135,10 @@ namespace Main.ViewModels
             SelectedServicesCollection = new ObservableCollection<ServiceItem>();
             _navigationService = navigationService;
 
-
-
-
             getServiceEdit();
+            
             displaySelectedServices();
-            // refreshAllServicesStatus();
+           // refreshAllServicesStatus();
         }
 
         /// <summary>
@@ -166,6 +160,11 @@ namespace Main.ViewModels
                 });
         }
 
+
+        /// <summary>
+        /// Get saved services, check if each service still exists
+        /// </summary>
+        /// <returns></returns>
         private async Task getServices()
         {
             if (SelectedServicesCollection.Count == 0)
@@ -185,7 +184,6 @@ namespace Main.ViewModels
 
             try
             {
-
                 var collection = await ServiceManager.GetSavedServiceItems();
                 SelectedServicesCollection = new ObservableCollection<ServiceItem>(collection);
             }
@@ -219,15 +217,13 @@ namespace Main.ViewModels
         }
 
         /// <summary>
-        /// Refresh all services in datagrid selected or not
+        /// Refresh all services in datagrid selected or not, check if still exists and display info message if was removed
         /// </summary>
         private void refreshAllServicesStatus()
         {
-            //TODO: check if services still exists, if not remove from the list and send a  message
-
             if (SelectedServicesCollection.Count != 0)
             {
-                foreach (ServiceItem service in SelectedServicesCollection)
+                foreach (ServiceItem service in SelectedServicesCollection.ToList())
                 {
                     if(ServiceManager.IsServiceExists(service.ServiceName))
                     {
@@ -237,7 +233,7 @@ namespace Main.ViewModels
                     else
                     {
                         SelectedServicesCollection.Remove(service);
-                        base.ShowErrorMessage(service.ServiceName +" " +"was removed", "error loading list of services");
+                        base.ShowInfoMessage(service.DisplayName+ " "+"("+service.ServiceName+")"+" " +"was removed", "Load Info");
                     }
                 }
             }

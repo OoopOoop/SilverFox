@@ -100,9 +100,9 @@
 
         <DataGrid x:Name="ServicesGrid"
                   Grid.Row="1"
-                  Grid.RowSpan="2"
                   Grid.Column="0"
-                  Margin="0,5,0,0"
+                  Grid.ColumnSpan="2"
+                  Margin="4,5,95,0"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   ColumnWidth="*"

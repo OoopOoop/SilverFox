@@ -33,6 +33,11 @@ namespace Main.Views
 
         }
 
+        /// <summary>
+        /// Remove 'DeferRefresh' error when editing services
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ServicesGrid_Unloaded(object sender, RoutedEventArgs e)
         {
             var grid = (DataGrid)sender;

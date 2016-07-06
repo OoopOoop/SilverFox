@@ -13,27 +13,16 @@ namespace Main.Models
 {
     public static class ServiceManager
     {
-        
+        /// <summary>
+        /// check if saved services were not removed
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <returns></returns>
         public static bool IsServiceExists(string serviceName)
         {
-            ServiceController controller = null;
-
-            try
-            {
-                controller = new ServiceController(serviceName);
-                return true;
-            }
-            catch(InvalidOperationException)
-            {
-                return false;
-            }
-           finally
-            {
-                if (controller != null)
-                {
-                    controller.Dispose();
-                }
-            }
+            ServiceController[] services = ServiceController.GetServices();
+            var service = services.FirstOrDefault(s => s.ServiceName == serviceName);
+            return service != null;
         }
 
 
@@ -42,6 +31,8 @@ namespace Main.Models
             var ServiceControllerService = ServiceController.GetServices().First((x) => x.ServiceName == item.ServiceName);
             return ServiceControllerService;
         }
+
+
 
         public static ManagementObject GetManagementObject(string serviceName)
         {

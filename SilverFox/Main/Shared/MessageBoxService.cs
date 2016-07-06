@@ -13,15 +13,15 @@ namespace Main.Shared
     {
         public void ShowErrorMessage(string text, string caption)
         {
-            System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-
+            MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
-        public bool ShowConfirmMessage(string text, string caption)
+        public void ShowInfoMessage(string text, string caption)
         {
-           return  System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Information) == MessageBoxResult.Yes;
+            MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        public bool ShowConfirmMessage(string text, string caption) => MessageBox.Show(text, caption, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes;
 
     }
 }
