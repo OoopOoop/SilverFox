@@ -39,7 +39,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <interactivity:Interaction.Triggers>
@@ -81,7 +80,7 @@
                     Command="{Binding RemoveServiceCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
-                    Content="Delete Selected"
+                    Content="Delete"
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshSelectedSerBtn"
@@ -89,11 +88,12 @@
                     Command="{Binding RefreshSelectedStatusCommand}"
                     CommandParameter="{Binding SelectedItems,
                                                ElementName=ServicesGrid}"
-                    Content="Refresh Selected"
+                    Content="Refresh"
                     Style="{StaticResource EnableBtnStyle}" />
 
             <Button x:Name="RefreshAllSerBtn"
                     Grid.Column="4"
+                    Margin="2"
                     Command="{Binding RefreshAllStatusCommand}"
                     Content="Refresh All" />
         </Grid>
@@ -121,24 +121,12 @@
                 <DataGridTemplateColumn Width="Auto" Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Vertical">
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{Binding Path=DisplayName,
-                                                          Mode=TwoWay,
-                                                          UpdateSourceTrigger=PropertyChanged}"
-                                           TextAlignment="Center"
-                                           TextWrapping="Wrap" />
-
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="{Binding Path=ServiceName,
-                                                          Mode=TwoWay,
-                                                          UpdateSourceTrigger=PropertyChanged,
-                                                          StringFormat={}({0})}"
-                                           TextAlignment="Center"
-                                           TextWrapping="Wrap" />
-                            </StackPanel>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Path=DisplayName,
+                                                      Mode=TwoWay,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
